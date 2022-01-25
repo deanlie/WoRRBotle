@@ -26,7 +26,7 @@ ui <- fluidPage(
             textInput("Guess3", NULL, "", '100px', ""),
             textInput("Guess4", NULL, "", '100px', ""),
             textInput("Guess5", NULL, "", '100px', ""),
-            textInput("Guess6", NULL, "", '100px', ""  )
+            textInput("Guess6", NULL, "", '100px', "")
         ),
 
         # Show a plot of the generated distribution
