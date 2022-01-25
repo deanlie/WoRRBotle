@@ -9,8 +9,11 @@
 
 library(shiny)
 
+source("./DisplayLetterTable.R")
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(
+    includeCSS("wordleTable.css"),
 
     # Application title
     titlePanel("WoRRBottle -- sort of a Wordle Bot in R"),
@@ -32,20 +35,6 @@ ui <- fluidPage(
         )
     )
 )
-
-letterTableToDisplay <- function(word1, word2, word3, word4, word5, word6) {
-  HTML(paste(tags$h4("Guesses"),
-             tags$table(
-               tags$tr(
-                 tags$td(substr(word1, 1, 1)),
-                 tags$td(substr(word1, 2, 2)),
-                 tags$td(substr(word1, 3, 3)),
-                 tags$td(substr(word1, 4, 4)),
-                 tags$td(substr(word1, 5, 5))
-               )
-             ),
-             sep=""))
-}
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {

@@ -1,0 +1,13 @@
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+td {
+  width: 50px;
+  height: 30px;
+}
+
+td.correct {
+  background-color: green;
+}
