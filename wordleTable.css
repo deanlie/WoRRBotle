@@ -1,13 +1,27 @@
 table, th, td {
-  border: 1px solid black;
+  border: 5px solid white;
   border-collapse: collapse;
 }
 
 td {
-  width: 50px;
-  height: 30px;
+  width: 80px;
+  height: 70px;
+  padding: 10px;
+  padding-left: 20px;
+  border-spacing: 5px;
+  text-transform: uppercase;
+  font-size: 50px;
+  font-family: Sans-Serif;
 }
 
 td.correct {
   background-color: green;
+}
+
+td.wrong_place {
+  background-color: yellow;
+}
+
+td.absent {
+  background-color: gray;
 }

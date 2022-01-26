@@ -1,5 +1,5 @@
 
-tableRowToDisplay <- function(word1) {
+tableRowToDisplay <- function(sought, word1) {
   tags$tr(tags$td(substr(word1, 1, 1), class = "correct"),
           tags$td(substr(word1, 2, 2)),
           tags$td(substr(word1, 3, 3)),
@@ -8,11 +8,11 @@ tableRowToDisplay <- function(word1) {
   )
 }
 
-letterTableToDisplay <- function(word1, word2, word3, word4, word5, word6) {
+letterTableToDisplay <- function(sought, word1, word2, word3, word4, word5, word6) {
   HTML(paste(tags$h4("Guesses"),
              tags$div(
                tags$table(
-                 tableRowToDisplay(word1),
+                 tableRowToDisplay(sought, word1)
                )
              ),
              sep=""))

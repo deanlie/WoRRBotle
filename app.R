@@ -21,6 +21,7 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
         sidebarPanel(
+            textInput("Sought", "Answer!", "", '100px', ""),
             textInput("Guess1", NULL, "", '100px', ""),
             textInput("Guess2", NULL, "", '100px', ""),
             textInput("Guess3", NULL, "", '100px', ""),
@@ -39,7 +40,8 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
 
-    output$letterTable <- renderUI({letterTableToDisplay(input$Guess1,
+    output$letterTable <- renderUI({letterTableToDisplay(input$Sought,
+                                                         input$Guess1,
                                                          input$Guess2,
                                                          input$Guess3,
                                                          input$Guess4,
