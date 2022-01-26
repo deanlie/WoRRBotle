@@ -345,5 +345,3 @@ testFilter <- function(switchArg) {
                                     "crier", "crimp"))
   possibilities_from_history(theProbes, theWordVector, traceThisRoutine = TRUE)
 }
-
-testFilter("four")
