@@ -1,27 +1,19 @@
-source("./WordProbability.R")
-# source("./ClassOfGuessLetter.R")
+source("./ClassOfGuessLetter.R")
 
-tableCellToDisplay <- function(word, probeValue, position) {
-  dClass <- list(G="correct", Y="wrong_place", x="absent")
-  theLetter <- substr(word, position, position)
-  theClass <- dClass[[substr(probeValue, position, position)]]
+tableCellToDisplay <- function(sought, guessed, position) {
+  theLetter <- substr(guessed, position, position)
+  theClass <- class_of_a_guess_letter(sought, guessed, position)
   tags$td(theLetter, class = theClass)   
 }
 
-tableRowToDisplay <- function(sought, word) {
-  dClass = list(G="correct", Y="wrong_place", x="absent")
-  probeValue <- evaluate_a_guess(sought, word)
-  tags$tr(tableCellToDisplay(word, probeValue, 1),
-          tableCellToDisplay(word, probeValue, 2),
-          tableCellToDisplay(word, probeValue, 3),
-          tableCellToDisplay(word, probeValue, 4),
-          tableCellToDisplay(word, probeValue, 5))
-  # tags$tr(tags$td(substr(word, 1, 1), class = "correct"),
-  #         tags$td(substr(word, 2, 2)),
-  #         tags$td(substr(word, 3, 3)),
-  #         tags$td(substr(word, 4, 4)),
-  #         tags$td(substr(word, 5, 5))
-  #  )
+tableRowToDisplay <- function(sought, guess) {
+  sUp <- str_to_upper(sought)
+  gUp <- str_to_upper(guess)
+  tags$tr(tableCellToDisplay(sUp, gUp, 1),
+          tableCellToDisplay(sUp, gUp, 2),
+          tableCellToDisplay(sUp, gUp, 3),
+          tableCellToDisplay(sUp, gUp, 4),
+          tableCellToDisplay(sUp, gUp, 5))
 }
 
 letterTableToDisplay <- function(sought, word1, word2, word3, word4, word5, word6) {

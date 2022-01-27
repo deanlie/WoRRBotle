@@ -18,35 +18,77 @@ ui <- fluidPage(
     # Application title
     titlePanel("WoRRBottle -- sort of a Wordle Bot in R"),
 
-    # Sidebar with a slider input for number of bins 
+    # Sidebar with the controls 
     sidebarLayout(
         sidebarPanel(
             textInput("Sought", "Answer!", "", '100px', ""),
-            textInput("Guess1", NULL, "", '100px', ""),
-            textInput("Guess2", NULL, "", '100px', ""),
-            textInput("Guess3", NULL, "", '100px', ""),
-            textInput("Guess4", NULL, "", '100px', ""),
-            textInput("Guess5", NULL, "", '100px', ""),
-            textInput("Guess6", NULL, "", '100px', "")
+            textInput("Guess1", NULL, "", '100px', "")
         ),
 
-        # Show a plot of the generated distribution
+        # Show the feedback for the guesses so far
         mainPanel(
-           htmlOutput("letterTable")
+           fluidRow(column(width=6, offset=3,htmlOutput("letterTable"))),
+           fluidRow(column(width=8, offset=2,
+                           actionButton("typedQ", "Q"),
+                           actionButton("typedW", "W"),
+                           actionButton("typedE", "E"),
+                           actionButton("typedR", "R"),
+                           actionButton("typedT", "T"),
+                           actionButton("typedY", "Y"),
+                           actionButton("typedU", "U"),
+                           actionButton("typedI", "I"),
+                           actionButton("typedO", "O"),
+                           actionButton("typedP", "P"),
+           ))
         )
     )
 )
 
-# Define server logic required to draw a histogram
-server <- function(input, output) {
+handleKeystroke <- function(rVals, aLetter) {
+  if (rVals$nKeys < 5) {
+    rVals$nKeys = rVals$nKeys + 1
+    substr(rVals$Guess1, rVals$nKeys, rVals$nKeys) <- aLetter
+    message("Word is now ", rVals$Guess1)
+  } else {
+    message("Too many keys, input ", aLetter, " ignored")
+  }
+  return(rVals)
+}
 
-    output$letterTable <- renderUI({letterTableToDisplay(input$Sought,
-                                                         input$Guess1,
-                                                         input$Guess2,
-                                                         input$Guess3,
-                                                         input$Guess4,
-                                                         input$Guess5,
-                                                         input$Guess6)
+# Define server logic for the game
+server <- function(input, output) {
+  
+    r <- reactiveValues(nKeys = 0, word = "     ")
+
+    observeEvent(input$typedE, {
+      r$nKeys <- r$nKeys + 1
+      r$word <- paste0(r$word, "E")
+      message("E typed, nKeys =", r$nKeys, " word =", r$word)
+    })
+    
+    observeEvent(input$typedR, {
+      r$nKeys <- r$nKeys + 1
+      r$word <- paste0(r$word, "R")
+      message("R typed, nKeys =", r$nKeys, " word =", r$word)
+    })
+    
+    observeEvent(input$typedT, {
+      r$nKeys <- r$nKeys + 1
+      r$word <- paste0(r$word, "T")
+      message("T typed, nKeys =", r$nKeys, " word =", r$word)
+    })
+    
+    
+
+    output$letterTable <- renderUI({
+      letterTableToDisplay(
+        input$Sought,
+        input$Guess1,
+        input$Guess2,
+        input$Guess3,
+        input$Guess4,
+        input$Guess5,
+        input$Guess6)
     })
 }
 
