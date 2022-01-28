@@ -7,13 +7,11 @@ tableCellToDisplay <- function(sought, guessed, position) {
 }
 
 tableRowToDisplay <- function(sought, guess) {
-  sUp <- str_to_upper(sought)
-  gUp <- str_to_upper(guess)
-  tags$tr(tableCellToDisplay(sUp, gUp, 1),
-          tableCellToDisplay(sUp, gUp, 2),
-          tableCellToDisplay(sUp, gUp, 3),
-          tableCellToDisplay(sUp, gUp, 4),
-          tableCellToDisplay(sUp, gUp, 5))
+  tags$tr(tableCellToDisplay(sought, guess, 1),
+          tableCellToDisplay(sought, guess, 2),
+          tableCellToDisplay(sought, guess, 3),
+          tableCellToDisplay(sought, guess, 4),
+          tableCellToDisplay(sought, guess, 5))
 }
 
 letterTableToDisplay <- function(sought, word1, word2, word3, word4, word5, word6) {

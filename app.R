@@ -9,7 +9,8 @@
 
 library(shiny)
 
-source("./DisplayLetterTable.R")
+source("DisplayLetterTable.R")
+source("ButtonForKeyboardLetter.R")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -30,37 +31,37 @@ ui <- fluidPage(
         # Show the feedback for the guesses so far
         mainPanel(
            fluidRow(column(width=6, offset=3,htmlOutput("letterTable"))),
-           tags$table(tags$tr(tags$td(actionButton("typedQ", "Q"), class="kbd"),
-                              tags$td(actionButton("typedW", "W"), class="kbd"),
-                              tags$td(actionButton("typedE", "E"), class="kbd"),
-                              tags$td(actionButton("typedR", "R"), class="kbd"),
-                              tags$td(actionButton("typedT", "T"), class="kbd"),
-                              tags$td(actionButton("typedY", "Y"), class="kbd"),
-                              tags$td(actionButton("typedU", "U"), class="kbd"),
-                              tags$td(actionButton("typedI", "I"), class="kbd"),
-                              tags$td(actionButton("typedO", "O"), class="kbd"),
-                              tags$td(actionButton("typedP", "P"), class="kbd"))),
-           fluidRow(column(width=8, offset=2, class="kbd",
-                           actionButton("typedA", "A"),
-                           actionButton("typedS", "S"),
-                           actionButton("typedD", "D"),
-                           actionButton("typedF", "F"),
-                           actionButton("typedG", "G"),
-                           actionButton("typedH", "H"),
-                           actionButton("typedJ", "J"),
-                           actionButton("typedK", "K"),
-                           actionButton("typedL", "L"))),
-           fluidRow(column(width=8, offset=2, class=
-                           actionButton("enter", "ENTER"),
-                           actionButton("typedZ", "Z"),
-                           actionButton("typedX", "X"),
-                           actionButton("typedC", "C"),
-                           actionButton("typedV", "V"),
-                           actionButton("typedB", "B"),
-                           actionButton("typedN", "N"),
-                           actionButton("typedM", "M"),
-                           actionButton("delete", "DELETE")))
-           )
+           fluidRow(tags$table(tags$tr(buttonForKeyboardLetter("Q"),
+                                       buttonForKeyboardLetter("W"),
+                                       buttonForKeyboardLetter("E"),
+                                       buttonForKeyboardLetter("R"),
+                                       buttonForKeyboardLetter("T"),
+                                       buttonForKeyboardLetter("Y"),
+                                       buttonForKeyboardLetter("U"),
+                                       buttonForKeyboardLetter("I"),
+                                       buttonForKeyboardLetter("O"),
+                                       buttonForKeyboardLetter("P")),
+                               class="kbd")),
+           fluidRow(tags$table(tags$tr(buttonForKeyboardLetter("A"),
+                                       buttonForKeyboardLetter("S"),
+                                       buttonForKeyboardLetter("D"),
+                                       buttonForKeyboardLetter("F"),
+                                       buttonForKeyboardLetter("G"),
+                                       buttonForKeyboardLetter("H"),
+                                       buttonForKeyboardLetter("J"),
+                                       buttonForKeyboardLetter("K"),
+                                       buttonForKeyboardLetter("L")),
+                               class="kbd")),
+           fluidRow(tags$table(tags$tr(buttonForKeyboardLetter("ENTER"),
+                                       buttonForKeyboardLetter("Z"),
+                                       buttonForKeyboardLetter("X"),
+                                       buttonForKeyboardLetter("C"),
+                                       buttonForKeyboardLetter("V"),
+                                       buttonForKeyboardLetter("B"),
+                                       buttonForKeyboardLetter("N"),
+                                       buttonForKeyboardLetter("M"),
+                                       buttonForKeyboardLetter("DELETE")),
+                               class="kbd")))
     )
 )
 
@@ -187,7 +188,7 @@ server <- function(input, output) {
       r <- handleKeystroke(r, "Z")
     })
     
-    observeEvent(input$enter, {
+    observeEvent(input$typedENTER, {
       if (r$nKeys < 5) {
         message("Don't try to enter an incomplete guess!")
       } else {
@@ -197,9 +198,10 @@ server <- function(input, output) {
       }
     })
     
-    observeEvent(input$delete, {
+    observeEvent(input$typedDELETE, {
       if (r$nKeys > 0) {
         substr(r$Guess, r$nKeys, r$nKeys) <- " "
+        message("Word is now ", r$Guess)
         r$nKeys <- r$nKeys - 1
       }
     })
