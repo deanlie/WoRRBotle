@@ -13,6 +13,8 @@ source("./DisplayLetterTable.R")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
+    theme = bslib::bs_theme(bootswatch = "darkly"),
+    
     includeCSS("wordleTable.css"),
 
     # Application title
@@ -28,18 +30,17 @@ ui <- fluidPage(
         # Show the feedback for the guesses so far
         mainPanel(
            fluidRow(column(width=6, offset=3,htmlOutput("letterTable"))),
-           fluidRow(column(width=8, offset=2,
-                           actionButton("typedQ", "Q"),
-                           actionButton("typedW", "W"),
-                           actionButton("typedE", "E"),
-                           actionButton("typedR", "R"),
-                           actionButton("typedT", "T"),
-                           actionButton("typedY", "Y"),
-                           actionButton("typedU", "U"),
-                           actionButton("typedI", "I"),
-                           actionButton("typedO", "O"),
-                           actionButton("typedP", "P"))),
-           fluidRow(column(width=8, offset=2,
+           tags$table(tags$tr(tags$td(actionButton("typedQ", "Q"), class="kbd"),
+                              tags$td(actionButton("typedW", "W"), class="kbd"),
+                              tags$td(actionButton("typedE", "E"), class="kbd"),
+                              tags$td(actionButton("typedR", "R"), class="kbd"),
+                              tags$td(actionButton("typedT", "T"), class="kbd"),
+                              tags$td(actionButton("typedY", "Y"), class="kbd"),
+                              tags$td(actionButton("typedU", "U"), class="kbd"),
+                              tags$td(actionButton("typedI", "I"), class="kbd"),
+                              tags$td(actionButton("typedO", "O"), class="kbd"),
+                              tags$td(actionButton("typedP", "P"), class="kbd"))),
+           fluidRow(column(width=8, offset=2, class="kbd",
                            actionButton("typedA", "A"),
                            actionButton("typedS", "S"),
                            actionButton("typedD", "D"),
@@ -49,7 +50,7 @@ ui <- fluidPage(
                            actionButton("typedJ", "J"),
                            actionButton("typedK", "K"),
                            actionButton("typedL", "L"))),
-           fluidRow(column(width=8, offset=2,
+           fluidRow(column(width=8, offset=2, class=
                            actionButton("enter", "ENTER"),
                            actionButton("typedZ", "Z"),
                            actionButton("typedX", "X"),

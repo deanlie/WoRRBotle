@@ -1,6 +1,8 @@
 table, th, td {
   border: 5px solid white;
   border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 td {
@@ -14,14 +16,34 @@ td {
   font-family: Sans-Serif;
 }
 
-td.correct {
-  background-color: green;
+
+td.keyboard-letter, td.keyboard-control {
+    padding-top: 20px;
+    padding-bottom: 20px;
+	background-color: #d8d8d8;
+	font-size: 12px;
+    border-radius: 5px;
 }
 
-td.wrong_place {
-  background-color: yellow;
+.correct {
+  background-color: #6aaa64;
 }
 
-td.absent {
-  background-color: gray;
+.wrong_place {
+  background-color: #c9b458;
+}
+
+.absent {
+  background-color: #86888a;
+}
+
+button.action-button {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background-color: #d8d8d8;
+  text-align: center;
+  border-spacing: 5px;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-family: Sans-Serif;
 }
