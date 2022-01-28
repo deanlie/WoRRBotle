@@ -9,14 +9,14 @@
 
 library(shiny)
 
-source("DisplayLetterTable.R")
-source("ButtonForKeyboardLetter.R")
+#source("DisplayLetterTable.R")
+#source("ButtonForKeyboardLetter.R")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
     theme = bslib::bs_theme(bootswatch = "darkly"),
     
-    includeCSS("wordleTable.css"),
+    includeCSS("www/wordleTable.css"),
 
     # Application title
     titlePanel("WoRRBottle -- sort of a Wordle Bot in R"),
@@ -192,6 +192,7 @@ server <- function(input, output) {
       if (r$nKeys < 5) {
         message("Don't try to enter an incomplete guess!")
       } else {
+        # OUCH score that and redisplay the row (or, I guess, all letter rows)
         message("Let's pretend we entered that word, now start it over")
         r$Guess <- "     "
         r$nKeys <- 0

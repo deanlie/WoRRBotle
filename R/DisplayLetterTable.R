@@ -1,4 +1,4 @@
-source("./ClassOfGuessLetter.R")
+# source("./ClassOfGuessLetter.R")
 
 tableCellToDisplay <- function(sought, guessed, position) {
   theLetter <- substr(guessed, position, position)
