@@ -1,5 +1,7 @@
 library(tidyverse)
 
+source("./R/ClassOfGuessLetter.R")
+
 # Notes:
 #  of 10230 words in /usr/share/dict/words,
 #  "stare" will give at least 1 "somewhere" response for all but 920
@@ -299,18 +301,111 @@ evaluate_a_guess <- function(correct, guessed) {
     return("LENGTH MISMATCH")
   }
   dots <- rep("x", times = str_length(correct))
-  correctLetters <- str_split(correct, "")
-  guessLetters <- str_split(guessed, "")
   for (i in 1:str_length(correct)) {
-    if (str_sub(guessed, i, i) == str_sub(correct, i, i)) {
+    if (str_to_upper(str_sub(guessed, i, i))== str_to_upper(str_sub(correct, i, i))) {
       dots[i] <- "G"
     } else {
-      if (str_detect(correct, str_sub(guessed, i, i))) {
+      if (str_detect(str_to_upper(correct), str_sub(str_to_upper(guessed), i, i))) {
         dots[i] <- "Y"
       }
     }
   }
   return(paste(dots, sep = "", collapse = ""))
+}
+
+evaluate_a_guess2 <- function(correct, guessed) {
+  if (str_length(correct) != str_length(guessed)) {
+    return("LENGTH MISMATCH")
+  }
+  dots <- rep("x", times = str_length(correct))
+  for (i in 1:str_length(correct)) {
+    class <- class_of_a_guess_letter(correct, guessed, i)
+    if (class == "correct") {
+      dots[i] <- "G"
+    } else {
+      if (class == "wrong_place") {
+        dots[i] <- "Y"
+      }
+    }
+  }
+  return(paste(dots, sep = "", collapse = ""))
+}
+
+evaluate_a_guess3 <- function(correct, guessed) {
+  # Sanity check
+  if (str_length(correct) != str_length(guessed)) {
+    return("LENGTH MISMATCH")
+  }
+  
+  # Set up record keeping. Assume misses everywhere.
+  dots <- rep("x", times = str_length(correct))
+
+  # Look for letters in the correct place
+  for (i in 1:str_length(correct)) {
+    if (substr(str_to_upper(guessed), i, i) ==
+        substr(str_to_upper(correct), i, i)) {
+      dots[i] <- "G"
+      # Letter in position i is accounted for. Don't count
+      #  a second guess of that letter as "wrong place."
+      substr(guessed, i, i) <- " "
+      substr(correct, i, i) <- " "
+    }
+  }
+  
+  # Look for letters in the wrong place
+  # OUCH message("In eval...3")
+  for (i in 1:str_length(correct)) {
+    # OUCH message("  check pos ", i, " correct = '", correct, "', guessed = '", guessed, "'")
+    # Skip letters which are correct in this guess per pass 1
+    theLetter <- str_to_upper(substr(correct, i, i))
+    if (theLetter != " ") {
+      
+      if (str_detect(str_to_upper(guessed), theLetter)) {
+        # There is at least one matching letter in the guess.
+        # Find the first one and mark it matched.
+        # Break, because there could be a subsequent wrong place
+        #  match to a subsequent correct-word occurrence of this letter.
+        for (j in 1:str_length(guessed)) {
+          if (theLetter == str_to_upper(substr(guessed, j, j))) {
+            substr(guessed, j, j) <- " "
+            dots[j] <- "Y"
+            break
+          }
+        }
+      }
+    }
+  }
+  return(paste(dots, sep = "", collapse = ""))
+}
+
+test_probe_evaluation <- function(correct, probe) { 
+  guessed <- substr(probe, 1, 5)
+  desired <- substr(probe, 6, 10)
+  message("Correct ", correct, " guess ", guessed)
+  res0 <- evaluate_a_guess(correct, guessed)
+  res2 <- evaluate_a_guess2(correct, guessed)
+  res3 <- evaluate_a_guess3(correct, guessed)
+  
+  if (res0 != desired) {
+    message("  res0 fails, returned ", res0)
+  }
+  
+  if (res2 != desired) {
+    message("  res2 fails, returned ", res2)
+  }
+  
+  if (res3 != desired) {
+    message("  res3 fails, returned ", res3)
+  }
+}
+
+test_evaluation <- function() {
+  for(aString in c("panicMANICxGGGG",
+                   "panicPAPICGGxGG",
+                   "statsATSATYGYxY",
+                   "eezezEZEEZGYYGG")) {
+    test_probe_evaluation(substr(aString, 1, 5), substr(aString, 6, 15))
+  }
 }
 
 probe_from_guess <- function(correct, guessed) {

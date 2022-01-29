@@ -67,7 +67,7 @@ ui <- fluidPage(
 
 # NOTE! This is named "Keystroke" but it is only for alphabetical keys!
 # "ENTER" and "DELETE" have their own handlers.
-handleKeystroke <- function(rVals, aLetter) {
+handleLetterKey <- function(rVals, aLetter) {
   if (rVals$guessNumber < 7) {
     if (rVals$nKeys < 5) {
       rVals$nKeys = rVals$nKeys + 1
@@ -94,107 +94,107 @@ server <- function(input, output) {
                         Solved = FALSE)
     
     observeEvent(input$typedA, {
-      r <- handleKeystroke(r, "A")
+      r <- handleLetterKey(r, "A")
     })
     
     observeEvent(input$typedB, {
-      r <- handleKeystroke(r, "B")
+      r <- handleLetterKey(r, "B")
     })
     
     observeEvent(input$typedC, {
-      r <- handleKeystroke(r, "C")
+      r <- handleLetterKey(r, "C")
     })
     
     observeEvent(input$typedD, {
-      r <- handleKeystroke(r, "D")
+      r <- handleLetterKey(r, "D")
     })
     
     observeEvent(input$typedE, {
-      r <- handleKeystroke(r, "E")
+      r <- handleLetterKey(r, "E")
     })
     
     observeEvent(input$typedF, {
-      r <- handleKeystroke(r, "F")
+      r <- handleLetterKey(r, "F")
     })
     
     observeEvent(input$typedG, {
-      r <- handleKeystroke(r, "G")
+      r <- handleLetterKey(r, "G")
     })
     
     observeEvent(input$typedH, {
-      r <- handleKeystroke(r, "H")
+      r <- handleLetterKey(r, "H")
     })
     
     observeEvent(input$typedI, {
-      r <- handleKeystroke(r, "I")
+      r <- handleLetterKey(r, "I")
     })
     
     observeEvent(input$typedJ, {
-      r <- handleKeystroke(r, "J")
+      r <- handleLetterKey(r, "J")
     })
     
     observeEvent(input$typedK, {
-      r <- handleKeystroke(r, "K")
+      r <- handleLetterKey(r, "K")
     })
     
     observeEvent(input$typedL, {
-      r <- handleKeystroke(r, "L")
+      r <- handleLetterKey(r, "L")
     })
     
     observeEvent(input$typedM, {
-      r <- handleKeystroke(r, "M")
+      r <- handleLetterKey(r, "M")
     })
     
     observeEvent(input$typedN, {
-      r <- handleKeystroke(r, "N")
+      r <- handleLetterKey(r, "N")
     })
     
     observeEvent(input$typedO, {
-      r <- handleKeystroke(r, "O")
+      r <- handleLetterKey(r, "O")
     })
     
     observeEvent(input$typedP, {
-      r <- handleKeystroke(r, "P")
+      r <- handleLetterKey(r, "P")
     })
     
     observeEvent(input$typedQ, {
-      r <- handleKeystroke(r, "Q")
+      r <- handleLetterKey(r, "Q")
     })
     
     observeEvent(input$typedR, {
-      r <- handleKeystroke(r, "R")
+      r <- handleLetterKey(r, "R")
     })
     
     observeEvent(input$typedS, {
-      r <- handleKeystroke(r, "S")
+      r <- handleLetterKey(r, "S")
     })
     
     observeEvent(input$typedT, {
-      r <- handleKeystroke(r, "T")
+      r <- handleLetterKey(r, "T")
     })
     
     observeEvent(input$typedU, {
-      r <- handleKeystroke(r, "U")
+      r <- handleLetterKey(r, "U")
     })
     
     observeEvent(input$typedV, {
-      r <- handleKeystroke(r, "V")
+      r <- handleLetterKey(r, "V")
     })
     
     observeEvent(input$typedW, {
-      r <- handleKeystroke(r, "W")
+      r <- handleLetterKey(r, "W")
     })
     
     observeEvent(input$typedX, {
-      r <- handleKeystroke(r, "X")
+      r <- handleLetterKey(r, "X")
     })
     
     observeEvent(input$typedY, {
-      r <- handleKeystroke(r, "Y")
+      r <- handleLetterKey(r, "Y")
     })
     
     observeEvent(input$typedZ, {
-      r <- handleKeystroke(r, "Z")
+      r <- handleLetterKey(r, "Z")
     })
     
     observeEvent(input$typedENTER, {
