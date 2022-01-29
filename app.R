@@ -72,10 +72,6 @@ handleKeystroke <- function(rVals, aLetter) {
     if (rVals$nKeys < 5) {
       rVals$nKeys = rVals$nKeys + 1
       substr(rVals$Guesses[rVals$guessNumber], rVals$nKeys, rVals$nKeys) <- aLetter
-      message("Words are now")
-      for (i in 1:rVals$guessNumber) {
-        message("  ", i, " ", rVals$Guesses[i])
-      }
     } else {
       message("Too many keys, input ", aLetter, " ignored")
     }
@@ -225,9 +221,6 @@ server <- function(input, output) {
     })
 
     output$letterTable <- renderUI({
-      # sought, guessArray, rowIndex, incompleteWordIndex
-      message("input$sought ", input$Sought)
-      message("r$guessNumber ", r$guessNumber)
       letterTableToDisplay(input$Sought,
                            r$Guesses,
                            r$guessNumber)

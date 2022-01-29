@@ -11,7 +11,6 @@ tableCellToDisplay <- function(sought, guessed, position, scoreIt) {
 }
 
 tableRowToDisplay <- function(sought, guess, row_index, incompleteWordIndex) {
-  message("tableRowToDisplay -- row_index ", row_index, "  incompl... ", incompleteWordIndex)
   scoreIt <- (row_index < incompleteWordIndex)
   tags$tr(tableCellToDisplay(sought, guess, 1, scoreIt),
           tableCellToDisplay(sought, guess, 2, scoreIt),
