@@ -1,0 +1,45 @@
+{
+  "input": {
+    "Guess1": "",
+    "Sought": "panic",
+    "typedA": 0,
+    "typedB": 0,
+    "typedC": 1,
+    "typedD": 0,
+    "typedDELETE": 0,
+    "typedE": 0,
+    "typedENTER": 1,
+    "typedF": 0,
+    "typedG": 0,
+    "typedH": 0,
+    "typedI": 1,
+    "typedJ": 0,
+    "typedK": 0,
+    "typedL": 0,
+    "typedM": 1,
+    "typedN": 0,
+    "typedO": 1,
+    "typedP": 1,
+    "typedQ": 0,
+    "typedR": 0,
+    "typedS": 0,
+    "typedT": 0,
+    "typedU": 0,
+    "typedV": 0,
+    "typedW": 0,
+    "typedX": 0,
+    "typedY": 0,
+    "typedZ": 0
+  },
+  "output": {
+    "letterTable": {
+      "html": "<h4>Guesses<\/h4><div>\n  <table>\n    <tr>\n      <td class=\"correct\">P<\/td>\n      <td class=\"wrong_place\">I<\/td>\n      <td class=\"absent\">M<\/td>\n      <td class=\"wrong_place\">C<\/td>\n      <td class=\"absent\">O<\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n      <td class=\"not_entered\"> <\/td>\n    <\/tr>\n  <\/table>\n<\/div>",
+      "deps": [
+
+      ]
+    }
+  },
+  "export": {
+
+  }
+}

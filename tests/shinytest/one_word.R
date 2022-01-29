@@ -1,0 +1,12 @@
+app <- ShinyDriver$new("../../")
+app$snapshotInit("one_word")
+
+app$setInputs(Sought = "panic")
+app$setInputs(typedP = "click")
+app$setInputs(typedI = "click")
+app$setInputs(typedM = "click")
+app$setInputs(typedC = "click")
+app$setInputs(typedO = "click")
+app$snapshot()
+app$setInputs(typedENTER = "click")
+app$snapshot()
