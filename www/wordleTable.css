@@ -46,6 +46,10 @@ td.kbd {
   background-color: #86888a;
 }
 
+.not_entered {
+  background-color: #0c0c000;
+}
+
 button.action-button {
   border: none;
   padding-top: 20px;

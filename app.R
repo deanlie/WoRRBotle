@@ -65,24 +65,37 @@ ui <- fluidPage(
     )
 )
 
+# NOTE! This is named "Keystroke" but it is only for alphabetical keys!
+# "ENTER" and "DELETE" have their own handlers.
 handleKeystroke <- function(rVals, aLetter) {
-  if (rVals$nKeys == 0) {
-    rVals$guessNumber <- rVals$guessNumber + 1
-  }
-  if (rVals$nKeys < 5) {
-    rVals$nKeys = rVals$nKeys + 1
-    substr(rVals$Guess, rVals$nKeys, rVals$nKeys) <- aLetter
-    message("Word is now ", rVals$Guess)
+  if (rVals$guessNumber < 7) {
+    if (rVals$nKeys < 5) {
+      rVals$nKeys = rVals$nKeys + 1
+      substr(rVals$Guesses[rVals$guessNumber], rVals$nKeys, rVals$nKeys) <- aLetter
+      message("Words are now")
+      for (i in 1:rVals$guessNumber) {
+        message("  ", i, " ", rVals$Guesses[i])
+      }
+    } else {
+      message("Too many keys, input ", aLetter, " ignored")
+    }
   } else {
-    message("Too many keys, input ", aLetter, " ignored")
+    message("No more guesses! Sorry, you lost.")
   }
+
   return(rVals)
 }
 
 # Define server logic for the game
 server <- function(input, output) {
   
-    r <- reactiveValues(nKeys = 0, Guess = "     ", guessNumber = 0)
+    r <- reactiveValues(nKeys = 0,
+                        Guess = "     ",
+                        guessNumber = 1,
+                        Guesses = c("     ", "     ", "     ",
+                                    "     ", "     ", "     "),
+                        NeedsDisplay = FALSE,
+                        Solved = FALSE)
     
     observeEvent(input$typedA, {
       r <- handleKeystroke(r, "A")
@@ -190,32 +203,34 @@ server <- function(input, output) {
     
     observeEvent(input$typedENTER, {
       if (r$nKeys < 5) {
-        message("Don't try to enter an incomplete guess!")
+        message("You can't enter an incomplete guess!")
       } else {
         # OUCH score that and redisplay the row (or, I guess, all letter rows)
-        message("Let's pretend we entered that word, now start it over")
-        r$Guess <- "     "
-        r$nKeys <- 0
+        if (r$guessNumber < 7) {
+          r$nKeys <- 0
+          r$guessNumber <- r$guessNumber + 1
+        } else {
+          message("No more guesses! Sorry, you lost.")
+          # OUCH Game is over!
+        }
       }
     })
     
     observeEvent(input$typedDELETE, {
       if (r$nKeys > 0) {
-        substr(r$Guess, r$nKeys, r$nKeys) <- " "
-        message("Word is now ", r$Guess)
+        substr(r$Guesses[r$guessNumber], r$nKeys, r$nKeys) <- " "
+        message("Active word is now ", r$Guesses[r$guessNumber])
         r$nKeys <- r$nKeys - 1
       }
     })
 
     output$letterTable <- renderUI({
-      letterTableToDisplay(
-        input$Sought,
-        input$Guess1,
-        input$Guess2,
-        input$Guess3,
-        input$Guess4,
-        input$Guess5,
-        input$Guess6)
+      # sought, guessArray, rowIndex, incompleteWordIndex
+      message("input$sought ", input$Sought)
+      message("r$guessNumber ", r$guessNumber)
+      letterTableToDisplay(input$Sought,
+                           r$Guesses,
+                           r$guessNumber)
     })
 }
 
