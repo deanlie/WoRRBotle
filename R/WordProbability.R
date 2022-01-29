@@ -362,9 +362,11 @@ evaluate_a_guess3 <- function(correct, guessed) {
       
       if (str_detect(str_to_upper(guessed), theLetter)) {
         # There is at least one matching letter in the guess.
-        # Find the first one and mark it matched.
-        # Break, because there could be a subsequent wrong place
-        #  match to a subsequent correct-word occurrence of this letter.
+        # Find the first one and mark it "wrong place".
+        # Break, because there could be a subsequent occurrence of
+        #  this letter, and we don't want to mark it "wrong place"
+        #  unless it matches a subsequent occurrence of the letter
+        #  in the correct word.
         for (j in 1:str_length(guessed)) {
           if (theLetter == str_to_upper(substr(guessed, j, j))) {
             substr(guessed, j, j) <- " "
@@ -400,10 +402,14 @@ test_probe_evaluation <- function(correct, probe) {
 }
 
 test_evaluation <- function() {
-  for(aString in c("panicMANICxGGGG",
-                   "panicPAPICGGxGG",
-                   "statsATSATYGYxY",
-                   "eezezEZEEZGYYGG")) {
+  tests1 <- c("panicMANICxGGGG",
+              "panicPAPICGGxGG",
+              "statsATSATYGYxY",
+              "eezezEZEEZGYYGG")
+  tests2 <- c("panicAPAPIYYxxY",
+              "panicAAAPPxGxYx")
+  
+  for(aString in tests2) {
     test_probe_evaluation(substr(aString, 1, 5), substr(aString, 6, 15))
   }
 }
