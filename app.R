@@ -89,17 +89,12 @@ updateKeyClasses <- function(sought, guessNumber, guesses, keyClasses) {
     letter <- substr(lastGuess, i, i)
     indexVector <- (keyClasses[["Letter"]] == letter)
     currentCode <- keyClasses$BestClass[indexVector]
-    message("currentCode for char ",
-            substr(guesses[guessNumber], i, i), " is ", currentCode)
     if ((currentCode == "unknown") ||
         ((currentCode == "wrong_place") && (class == "correct"))) {
+      message("currentCode for char ", substr(guesses[guessNumber], i, i),
+              " in slot ", i, " is ", currentCode)
       keyClasses$BestClass[indexVector] <- class
-      # updateActionButton(session = getDefaultReactiveDomain(),
-      #                    inputId = paste0("typed", letter),
-      #                    label = letter,
-      #                    class = class)
-      message("(Called) updateActionButton for ", paste0("typed", letter),
-              " class = ", class)
+      message("updated that to ", class)
     }
   }
   return(keyClasses)
