@@ -1,7 +1,5 @@
 library(tidyverse)
 
-source("./R/ClassOfGuessLetter.R")
-
 # Notes:
 #  of 10230 words in /usr/share/dict/words,
 #  "stare" will give at least 1 "somewhere" response for all but 920

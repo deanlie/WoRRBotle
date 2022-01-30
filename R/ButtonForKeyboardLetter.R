@@ -4,5 +4,9 @@ buttonForKeyboardLetter <- function(theText, extraClass = NULL) {
   } else {
     theClass <- paste("kbd", extraClass)
   }
-  tags$td(actionButton(paste0("typed", theText), theText), class=theClass)
+  if (is.null(extraClass)) {
+    tags$td(actionButton(paste0("typed", theText), theText), class="kbd")
+  } else {
+    tags$td(actionButton(paste0("typed", theText), theText, class=theClass, class="kbd"))
+  }
 }

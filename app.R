@@ -8,9 +8,7 @@
 #
 
 library(shiny)
-
-#source("DisplayLetterTable.R")
-#source("ButtonForKeyboardLetter.R")
+library(tidyverse)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -82,6 +80,31 @@ handleLetterKey <- function(rVals, aLetter) {
   return(rVals)
 }
 
+updateKeyClasses <- function(sought, guessNumber, guesses, keyClasses) {
+  lastGuess <- guesses[guessNumber]
+  code = evaluate_a_guess(sought, lastGuess)
+  message("Evaluation for '", lastGuess, "' is ", code)
+  for (i in 1:5) {
+    class <- classFromCode(code, i)
+    letter <- substr(lastGuess, i, i)
+    indexVector <- (keyClasses[["Letter"]] == letter)
+    currentCode <- keyClasses$BestClass[indexVector]
+    message("currentCode for char ",
+            substr(guesses[guessNumber], i, i), " is ", currentCode)
+    if ((currentCode == "unknown") ||
+        ((currentCode == "wrong_place") && (class == "correct"))) {
+      keyClasses$BestClass[indexVector] <- class
+      # updateActionButton(session = getDefaultReactiveDomain(),
+      #                    inputId = paste0("typed", letter),
+      #                    label = letter,
+      #                    class = class)
+      message("(Called) updateActionButton for ", paste0("typed", letter),
+              " class = ", class)
+    }
+  }
+  return(keyClasses)
+}
+
 # Define server logic for the game
 server <- function(input, output) {
   
@@ -90,6 +113,11 @@ server <- function(input, output) {
                         guessNumber = 1,
                         Guesses = c("     ", "     ", "     ",
                                     "     ", "     ", "     "),
+                        KeyClasses = tibble(Letter = unlist(
+                                              str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                                                        boundary("character"))),
+                                            BestClass = "unknown",
+                                            Modified = FALSE),
                         NeedsDisplay = FALSE,
                         Solved = FALSE)
     
@@ -201,11 +229,15 @@ server <- function(input, output) {
       if (r$nKeys < 5) {
         message("You can't enter an incomplete guess!")
       } else {
-        # OUCH score that and redisplay the row (or, I guess, all letter rows)
+        # Score that, update keyboard status, and redisplay all letter rows
         if (r$guessNumber < 7) {
           r$nKeys <- 0
-          r$guessNumber <- r$guessNumber + 1
-        } else {
+          r$KeyClasses <- updateKeyClasses(input$Sought,
+                                           r$guessNumber, 
+                                           r$Guesses,
+                                           r$KeyClasses)
+           r$guessNumber <- r$guessNumber + 1
+       } else {
           message("No more guesses! Sorry, you lost.")
           # OUCH Game is over!
         }
