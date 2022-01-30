@@ -1,22 +1,38 @@
-# source("./ClassOfGuessLetter.R")
+library(stringr)
 
-tableCellToDisplay <- function(sought, guessed, position, scoreIt) {
-  theLetter <- substr(guessed, position, position)
-  if (scoreIt) {
-    theClass <- class_of_a_guess_letter(sought, guessed, position)
+classFromCode <- function(codes, position) {
+  theLetter <- substr(codes, position, position)
+  if (theLetter == "G") {
+    return("correct")
   } else {
-    theClass <- "not_entered"
+    if (theLetter == "Y") {
+      return("wrong_place")
+    } else {
+      return("absent")
+    }
   }
-  tags$td(theLetter, class = theClass)   
+}
+
+tableCellToDisplay <- function(guessed, position, codes, scoreIt) {
+  if (scoreIt) {
+    theClasses <- paste(classFromCode(codes, position), "guesses")
+  } else {
+    theClasses <- "not_entered guesses"
+  }
+  tags$td(substr(guessed, position, position), class = theClasses)   
 }
 
 tableRowToDisplay <- function(sought, guess, row_index, incompleteWordIndex) {
+  if (row_index < incompleteWordIndex) {
+    codes <- evaluate_a_guess(sought, guess)
+    theClass <- classFromCode
+  }
   scoreIt <- (row_index < incompleteWordIndex)
-  tags$tr(tableCellToDisplay(sought, guess, 1, scoreIt),
-          tableCellToDisplay(sought, guess, 2, scoreIt),
-          tableCellToDisplay(sought, guess, 3, scoreIt),
-          tableCellToDisplay(sought, guess, 4, scoreIt),
-          tableCellToDisplay(sought, guess, 5, scoreIt))
+  tags$tr(tableCellToDisplay(guess, 1, codes, scoreIt),
+          tableCellToDisplay(guess, 2, codes, scoreIt),
+          tableCellToDisplay(guess, 3, codes, scoreIt),
+          tableCellToDisplay(guess, 4, codes, scoreIt),
+          tableCellToDisplay(guess, 5, codes, scoreIt))
 }
 
 tableToDisplay <- function(sought, guessArray, incompleteWordIndex) {
@@ -25,7 +41,8 @@ tableToDisplay <- function(sought, guessArray, incompleteWordIndex) {
              tableRowToDisplay(sought, guessArray[3], 3, incompleteWordIndex),
              tableRowToDisplay(sought, guessArray[4], 4, incompleteWordIndex),
              tableRowToDisplay(sought, guessArray[5], 5, incompleteWordIndex),
-             tableRowToDisplay(sought, guessArray[6], 6, incompleteWordIndex))
+             tableRowToDisplay(sought, guessArray[6], 6, incompleteWordIndex),
+             class = "guesses")
 }
 
 letterTableToDisplay <- function(sought, guessArray, incompleteWordIndex) {
