@@ -84,6 +84,7 @@ button.action-button {
   padding-bottom: 20px;
   padding-left: 10px;
   padding-right: 10px;
+  background-color: #ff000080;
   text-align: center;
   text-transform: uppercase;
   font-size: 12px;

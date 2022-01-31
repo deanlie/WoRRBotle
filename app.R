@@ -28,7 +28,10 @@ ui <- fluidPage(
 
         # Show the feedback for the guesses so far
         mainPanel(
-          fluidRow(column(width=6, offset=3,htmlOutput("letterTable"))),
+          fluidRow(column(width=6, offset=3, htmlOutput("letterTable"))),
+          # fluidRow(htmlOutput("kbdTop")), # Substituting this for the
+          #  fluidRow below creates an active keyboard row left-aligned and
+          #  not styled properly (only action button padding(?) is colored)
           fluidRow(tags$table(tags$tr(buttonForKeyboardLetter("Q"),
                                       buttonForKeyboardLetter("W"),
                                       buttonForKeyboardLetter("E"),
@@ -83,7 +86,7 @@ handleLetterKey <- function(rVals, aLetter) {
 updateKeyClasses <- function(sought, guessNumber, guesses, keyClasses) {
   lastGuess <- guesses[guessNumber]
   code = evaluate_a_guess(sought, lastGuess)
-  message("Evaluation for '", lastGuess, "' is ", code)
+  # message("Evaluation for '", lastGuess, "' is ", code)
   for (i in 1:5) {
     class <- classFromCode(code, i)
     letter <- substr(lastGuess, i, i)
@@ -91,10 +94,10 @@ updateKeyClasses <- function(sought, guessNumber, guesses, keyClasses) {
     currentCode <- keyClasses$BestClass[indexVector]
     if ((currentCode == "unknown") ||
         ((currentCode == "wrong_place") && (class == "correct"))) {
-      message("currentCode for char ", substr(guesses[guessNumber], i, i),
-              " in slot ", i, " is ", currentCode)
+      # message("currentCode for char ", substr(guesses[guessNumber], i, i),
+      #         " in slot ", i, " is ", currentCode)
       keyClasses$BestClass[indexVector] <- class
-      message("updated that to ", class)
+      # message("updated that to ", class)
     }
   }
   return(keyClasses)
@@ -251,6 +254,10 @@ server <- function(input, output) {
       letterTableToDisplay(input$Sought,
                            r$Guesses,
                            r$guessNumber)
+    })
+    
+    output$kbdTop <- renderUI({
+      kbdRowToDisplay("QWERTYUIOP", r$KeyClasses)
     })
 }
 

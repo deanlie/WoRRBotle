@@ -13,7 +13,7 @@ classFromCode <- function(codes, position) {
   }
 }
 
-tableCellToDisplay <- function(guessed, position, codes, scoreIt) {
+guessCellToDisplay <- function(guessed, position, codes, scoreIt) {
   if (scoreIt) {
     theClasses <- paste(classFromCode(codes, position), "guesses")
   } else {
@@ -22,31 +22,51 @@ tableCellToDisplay <- function(guessed, position, codes, scoreIt) {
   tags$td(substr(guessed, position, position), class = theClasses)   
 }
 
-tableRowToDisplay <- function(sought, guess, row_index, incompleteWordIndex) {
+guessRowToDisplay <- function(sought, guess, row_index, incompleteWordIndex) {
   if (row_index < incompleteWordIndex) {
     codes <- evaluate_a_guess(sought, guess)
     theClass <- classFromCode
   }
   scoreIt <- (row_index < incompleteWordIndex)
-  tags$tr(tableCellToDisplay(guess, 1, codes, scoreIt),
-          tableCellToDisplay(guess, 2, codes, scoreIt),
-          tableCellToDisplay(guess, 3, codes, scoreIt),
-          tableCellToDisplay(guess, 4, codes, scoreIt),
-          tableCellToDisplay(guess, 5, codes, scoreIt))
+  tags$tr(guessCellToDisplay(guess, 1, codes, scoreIt),
+          guessCellToDisplay(guess, 2, codes, scoreIt),
+          guessCellToDisplay(guess, 3, codes, scoreIt),
+          guessCellToDisplay(guess, 4, codes, scoreIt),
+          guessCellToDisplay(guess, 5, codes, scoreIt))
 }
 
-tableToDisplay <- function(sought, guessArray, incompleteWordIndex) {
-  tags$table(tableRowToDisplay(sought, guessArray[1], 1, incompleteWordIndex),
-             tableRowToDisplay(sought, guessArray[2], 2, incompleteWordIndex),
-             tableRowToDisplay(sought, guessArray[3], 3, incompleteWordIndex),
-             tableRowToDisplay(sought, guessArray[4], 4, incompleteWordIndex),
-             tableRowToDisplay(sought, guessArray[5], 5, incompleteWordIndex),
-             tableRowToDisplay(sought, guessArray[6], 6, incompleteWordIndex),
+guessTableToDisplay <- function(sought, guessArray, incompleteWordIndex) {
+  tags$table(guessRowToDisplay(sought, guessArray[1], 1, incompleteWordIndex),
+             guessRowToDisplay(sought, guessArray[2], 2, incompleteWordIndex),
+             guessRowToDisplay(sought, guessArray[3], 3, incompleteWordIndex),
+             guessRowToDisplay(sought, guessArray[4], 4, incompleteWordIndex),
+             guessRowToDisplay(sought, guessArray[5], 5, incompleteWordIndex),
+             guessRowToDisplay(sought, guessArray[6], 6, incompleteWordIndex),
              class = "guesses")
 }
 
 letterTableToDisplay <- function(sought, guessArray, incompleteWordIndex) {
   HTML(paste(tags$h4("Guesses"),
-             tags$div(tableToDisplay(sought, guessArray, incompleteWordIndex)),
+             tags$div(guessTableToDisplay(sought, guessArray, incompleteWordIndex)),
              sep=""))
 }
+
+kbdRowToDisplay <- function(letterSequence, keyClasses) {
+  letters <- unlist(str_split(letterSequence, ""))
+  message("in kbdRowToDisplay")
+  trArg <- ""
+  for (letter in letters) {
+    trArg <- paste(trArg, styledButtonForKeyboardLetter(letter, keyClasses), sep = "\n")
+  }
+  # NO, displays &lt; HTML(paste("  ", tags$table(tags$tr(trArg), class="kbd"), sep=""))
+  # NO, displays &lt; HTML(as.character(tags$table(tags$tr(trArg), class="kbd")))
+  # NO, not a char vector: HTML(tags$table(tags$tr(trArg), class="kbd"))
+  # NO, not a char vector: HTML(tags$table(tags$tr(HTML(trArg)), class="kbd"), sep="")
+  # YES: HTML(paste("  ", tags$table(tags$tr(HTML(trArg)), class="kbd"), sep=""))
+  # YES: HTML(paste("", tags$table(tags$tr(HTML(trArg)), class="kbd"), sep=""))
+  
+  # This shows colored borders around action buttons after "enter",
+  # but with the whole table row left-aligned.
+  HTML(paste(tags$table(tags$tr(HTML(trArg)), class="kbd"), sep=""))
+}
+
