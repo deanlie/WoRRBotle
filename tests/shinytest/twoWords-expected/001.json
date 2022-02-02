@@ -1,8 +1,8 @@
 {
   "input": {
     "Guess1": "",
-    "Sought": "panic",
-    "typedA": 0,
+    "Sought": "PANIC",
+    "typedA": 2,
     "typedB": 0,
     "typedC": 0,
     "typedD": 0,
@@ -19,11 +19,11 @@
     "typedM": 0,
     "typedN": 0,
     "typedO": 0,
-    "typedP": 0,
+    "typedP": 1,
     "typedQ": 0,
     "typedR": 0,
-    "typedS": 0,
-    "typedT": 0,
+    "typedS": 1,
+    "typedT": 1,
     "typedU": 0,
     "typedV": 0,
     "typedW": 0,
@@ -39,7 +39,7 @@
       ]
     },
     "letterTable": {
-      "html": "<h4>Guesses<\/h4><div>\n  <table class=\"guesses\">\n    <tr>\n      <td class=\"correct guesses\">P<\/td>\n      <td class=\"wrong_place guesses\">I<\/td>\n      <td class=\"absent guesses\">M<\/td>\n      <td class=\"wrong_place guesses\">C<\/td>\n      <td class=\"absent guesses\">O<\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n  <\/table>\n<\/div>",
+      "html": "<h4>Guesses<\/h4><div>\n  <table class=\"guesses\">\n    <tr>\n      <td class=\"not_entered guesses\">P<\/td>\n      <td class=\"not_entered guesses\">A<\/td>\n      <td class=\"not_entered guesses\">S<\/td>\n      <td class=\"not_entered guesses\">T<\/td>\n      <td class=\"not_entered guesses\">A<\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n  <\/table>\n<\/div>",
       "deps": [
 
       ]
