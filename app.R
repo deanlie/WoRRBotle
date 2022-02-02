@@ -32,17 +32,8 @@ ui <- fluidPage(
           # fluidRow(htmlOutput("kbdTop")), # Substituting this for the
           #  fluidRow below creates an active keyboard row left-aligned and
           #  not styled properly (only action button padding(?) is colored)
-          fluidRow(tags$table(tags$tr(buttonForKeyboardLetter("Q"),
-                                      buttonForKeyboardLetter("W"),
-                                      buttonForKeyboardLetter("E"),
-                                      buttonForKeyboardLetter("R"),
-                                      buttonForKeyboardLetter("T"),
-                                      buttonForKeyboardLetter("Y"),
-                                      buttonForKeyboardLetter("U"),
-                                      buttonForKeyboardLetter("I"),
-                                      buttonForKeyboardLetter("O"),
-                                      buttonForKeyboardLetter("P")),
-                              class="kbd")),
+          fluidRow(tags$table(tags$table(makeStyledTrTag(keyboardRow1Vector()),
+                              class="kbd"))),
           fluidRow(tags$table(tags$tr(buttonForKeyboardLetter("A"),
                                       buttonForKeyboardLetter("S"),
                                       buttonForKeyboardLetter("D"),

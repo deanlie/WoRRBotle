@@ -20,3 +20,21 @@ styledButtonForKeyboardLetter <- function(theText, keyClasses) {
   }
   buttonForKeyboardLetter(theText, extraClass = extraClass)
 }
+
+keyboardRow1Vector <- function() {
+  unlist(str_split("QWERTYUIOP", ""))
+}
+
+keyboardRow2Vector <- function() {
+  unlist(str_split("ASDFGHJKL", ""))
+}
+
+keyboardRow3Vector <- function() {
+  c("ENTER", unlist(str_split("ZXCVBNM", "")), "DELETE")
+}
+
+makeStyledTrTag <- function(aVectorOfStrings, keyClasses = NULL) {
+  tags$tr(lapply(aVectorOfStrings,
+                 function(aString) styledButtonForKeyboardLetter(aString,
+                                                                 keyClasses)))
+}
