@@ -22,19 +22,14 @@ ui <- fluidPage(
     # Sidebar with the controls 
     sidebarLayout(
         sidebarPanel(
-            textInput("Sought", "Answer!", "", '100px', ""),
-            textInput("Guess1", NULL, "", '100px', "")
+          textInput("Sought", "Answer!", "", '100px', ""),
+          textInput("Guess1", NULL, "", '100px', "")
         ),
 
         # Show the feedback for the guesses so far
         mainPanel(
           htmlOutput("letterTable"),
-          
-          # htmlOutput("keyboardTables"),
-
-          fluidRow(makeStyledKeyboardTableRow(keyboardRow1Vector())),
-          fluidRow(makeStyledKeyboardTableRow(keyboardRow2Vector())),
-          fluidRow(makeStyledKeyboardTableRow(keyboardRow3Vector()))
+          htmlOutput("keyboardTables")
         )
     )
 )
@@ -57,7 +52,6 @@ handleLetterKey <- function(rVals, aLetter) {
 updateKeyClasses <- function(sought, guessNumber, guesses, keyClasses) {
   lastGuess <- guesses[guessNumber]
   code = evaluate_a_guess(sought, lastGuess)
-  # message("Evaluation for '", lastGuess, "' is ", code)
   for (i in 1:5) {
     class <- classFromCode(code, i)
     letter <- substr(lastGuess, i, i)
@@ -65,10 +59,7 @@ updateKeyClasses <- function(sought, guessNumber, guesses, keyClasses) {
     currentCode <- keyClasses$BestClass[indexVector]
     if ((currentCode == "unknown") ||
         ((currentCode == "wrong_place") && (class == "correct"))) {
-      # message("currentCode for char ", substr(guesses[guessNumber], i, i),
-      #         " in slot ", i, " is ", currentCode)
       keyClasses$BestClass[indexVector] <- class
-      # message("updated that to ", class)
     }
   }
   return(keyClasses)
@@ -131,16 +122,11 @@ server <- function(input, output) {
                            r$guessNumber)
     })
     
-    # output$kbdTop <- renderUI({
-    #   kbdRowToDisplay("QWERTYUIOP", r$KeyClasses)
-    # })
     output$keyboardTables <- renderUI({
-      c(tags$table(makeStyledTrTag(keyboardRow1Vector()),
-                          class="kbd"),
-      tags$table(makeStyledTrTag(keyboardRow2Vector()),
-                          class = "kbd"),
-      tags$table(makeStyledTrTag(keyboardRow3Vector()),
-                          class = "kbd"))
+      r$KeyClasses # To make sure this is reactive
+      HTML(paste(makeStyledKeyboardTableRow(keyboardRow1Vector()),
+                 makeStyledKeyboardTableRow(keyboardRow2Vector()),
+                 makeStyledKeyboardTableRow(keyboardRow3Vector())))
     })
 }
 

@@ -33,15 +33,9 @@ keyboardRow3Vector <- function() {
   c("ENTER", unlist(str_split("ZXCVBNM", "")), "DELETE")
 }
 
-makeStyledTrTag <- function(aVectorOfStrings, keyClasses = NULL) {
-  tags$tr(lapply(aVectorOfStrings,
-                 function(aString) styledButtonForKeyboardLetter(aString,
-                                                                 keyClasses)))
-}
-
 makeStyledKeyboardTableRow <- function(aVectorOfStrings, keyClasses = NULL) {
-  tags$table(tags$tr(lapply(aVectorOfStrings,
+  HTML(paste(tags$table(tags$tr(lapply(aVectorOfStrings,
                             function(aString) styledButtonForKeyboardLetter(aString,
                                                                             keyClasses))),
-             class="kbd")
+             class="kbd")), sep="")
 }
