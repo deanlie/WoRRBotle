@@ -38,3 +38,10 @@ makeStyledTrTag <- function(aVectorOfStrings, keyClasses = NULL) {
                  function(aString) styledButtonForKeyboardLetter(aString,
                                                                  keyClasses)))
 }
+
+makeStyledKeyboardTableRow <- function(aVectorOfStrings, keyClasses = NULL) {
+  tags$table(tags$tr(lapply(aVectorOfStrings,
+                            function(aString) styledButtonForKeyboardLetter(aString,
+                                                                            keyClasses))),
+             class="kbd")
+}

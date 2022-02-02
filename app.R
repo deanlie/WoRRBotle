@@ -29,16 +29,19 @@ ui <- fluidPage(
         # Show the feedback for the guesses so far
         mainPanel(
           htmlOutput("letterTable"),
-          # fluidRow(htmlOutput("kbdTop")), # Substituting this for the
-          #  fluidRow below creates an active keyboard row left-aligned and
-          #  not styled properly (only action button padding(?) is colored)
+          
+          # htmlOutput("keyboardTables"),
 
-          fluidRow(tags$table(makeStyledTrTag(keyboardRow1Vector()),
-                                     class="kbd")),
-          fluidRow(tags$table(makeStyledTrTag(keyboardRow2Vector()),
-                                     class = "kbd")),
-          fluidRow(tags$table(makeStyledTrTag(keyboardRow3Vector()),
-                                     class = "kbd"))
+          # fluidRow(tags$table(makeStyledTrTag(keyboardRow1Vector()),
+          #                            class="kbd")),
+          # fluidRow(tags$table(makeStyledTrTag(keyboardRow2Vector()),
+          #                            class = "kbd")),
+          # fluidRow(tags$table(makeStyledTrTag(keyboardRow3Vector()),
+          #                            class = "kbd"))
+          
+          fluidRow(makeStyledKeyboardTableRow(keyboardRow1Vector())),
+          fluidRow(makeStyledKeyboardTableRow(keyboardRow2Vector())),
+          fluidRow(makeStyledKeyboardTableRow(keyboardRow3Vector()))
         )
     )
 )
@@ -233,8 +236,16 @@ server <- function(input, output) {
                            r$guessNumber)
     })
     
-    output$kbdTop <- renderUI({
-      kbdRowToDisplay("QWERTYUIOP", r$KeyClasses)
+    # output$kbdTop <- renderUI({
+    #   kbdRowToDisplay("QWERTYUIOP", r$KeyClasses)
+    # })
+    output$keyboardTables <- renderUI({
+      c(tags$table(makeStyledTrTag(keyboardRow1Vector()),
+                          class="kbd"),
+      tags$table(makeStyledTrTag(keyboardRow2Vector()),
+                          class = "kbd"),
+      tags$table(makeStyledTrTag(keyboardRow3Vector()),
+                          class = "kbd"))
     })
 }
 
