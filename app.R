@@ -32,28 +32,35 @@ ui <- fluidPage(
           # fluidRow(htmlOutput("kbdTop")), # Substituting this for the
           #  fluidRow below creates an active keyboard row left-aligned and
           #  not styled properly (only action button padding(?) is colored)
-          fluidRow(tags$table(tags$table(makeStyledTrTag(keyboardRow1Vector()),
-                              class="kbd"))),
-          fluidRow(tags$table(tags$tr(buttonForKeyboardLetter("A"),
-                                      buttonForKeyboardLetter("S"),
-                                      buttonForKeyboardLetter("D"),
-                                      buttonForKeyboardLetter("F"),
-                                      buttonForKeyboardLetter("G"),
-                                      buttonForKeyboardLetter("H"),
-                                      buttonForKeyboardLetter("J"),
-                                      buttonForKeyboardLetter("K"),
-                                      buttonForKeyboardLetter("L")),
-                              class="kbd")),
-          fluidRow(tags$table(tags$tr(buttonForKeyboardLetter("ENTER"),
-                                      buttonForKeyboardLetter("Z"),
-                                      buttonForKeyboardLetter("X"),
-                                      buttonForKeyboardLetter("C"),
-                                      buttonForKeyboardLetter("V"),
-                                      buttonForKeyboardLetter("B"),
-                                      buttonForKeyboardLetter("N"),
-                                      buttonForKeyboardLetter("M"),
-                                      buttonForKeyboardLetter("DELETE")),
-                              class="kbd")))
+
+          fluidRow(tags$table(makeStyledTrTag(keyboardRow1Vector()),
+                                     class="kbd")),
+          fluidRow(tags$table(makeStyledTrTag(keyboardRow2Vector()),
+                                     class = "kbd")),
+          fluidRow(tags$table(makeStyledTrTag(keyboardRow3Vector()),
+                                     class = "kbd"))
+        )
+          
+          # fluidRow(tags$table(tags$tr(buttonForKeyboardLetter("A"),
+          #                             buttonForKeyboardLetter("S"),
+          #                             buttonForKeyboardLetter("D"),
+          #                             buttonForKeyboardLetter("F"),
+          #                             buttonForKeyboardLetter("G"),
+          #                             buttonForKeyboardLetter("H"),
+          #                             buttonForKeyboardLetter("J"),
+          #                             buttonForKeyboardLetter("K"),
+          #                             buttonForKeyboardLetter("L")),
+          #                     class="kbd")),
+          # fluidRow(tags$table(tags$tr(buttonForKeyboardLetter("ENTER"),
+          #                             buttonForKeyboardLetter("Z"),
+          #                             buttonForKeyboardLetter("X"),
+          #                             buttonForKeyboardLetter("C"),
+          #                             buttonForKeyboardLetter("V"),
+          #                             buttonForKeyboardLetter("B"),
+          #                             buttonForKeyboardLetter("N"),
+          #                             buttonForKeyboardLetter("M"),
+          #                             buttonForKeyboardLetter("DELETE")),
+          #                     class="kbd")))
     )
 )
 
