@@ -23,7 +23,7 @@ ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
           textInput("Sought", "Answer!", "", '100px', ""),
-          textInput("Guess1", NULL, "", '100px', "")
+          htmlOutput("somePossibleWords")
         ),
 
         # Show the feedback for the guesses so far
@@ -126,6 +126,10 @@ server <- function(input, output) {
       HTML(paste(makeStyledKeyboardTableRow(keyboardRow1Vector(), r$KeyClasses),
                  makeStyledKeyboardTableRow(keyboardRow2Vector(), r$KeyClasses),
                  makeStyledKeyboardTableRow(keyboardRow3Vector(), r$KeyClasses)))
+    })
+    
+    output$somePossibleWords <- renderUI({
+      HTML(topNRemainingWords(input$Sought, r$Guesses, r$guessNumber, 25))
     })
 }
 
