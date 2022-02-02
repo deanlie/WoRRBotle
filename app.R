@@ -123,10 +123,9 @@ server <- function(input, output) {
     })
     
     output$keyboardTables <- renderUI({
-      r$KeyClasses # To make sure this is reactive
-      HTML(paste(makeStyledKeyboardTableRow(keyboardRow1Vector()),
-                 makeStyledKeyboardTableRow(keyboardRow2Vector()),
-                 makeStyledKeyboardTableRow(keyboardRow3Vector())))
+      HTML(paste(makeStyledKeyboardTableRow(keyboardRow1Vector(), r$KeyClasses),
+                 makeStyledKeyboardTableRow(keyboardRow2Vector(), r$KeyClasses),
+                 makeStyledKeyboardTableRow(keyboardRow3Vector(), r$KeyClasses)))
     })
 }
 
