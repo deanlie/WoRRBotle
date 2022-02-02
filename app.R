@@ -32,13 +32,6 @@ ui <- fluidPage(
           
           # htmlOutput("keyboardTables"),
 
-          # fluidRow(tags$table(makeStyledTrTag(keyboardRow1Vector()),
-          #                            class="kbd")),
-          # fluidRow(tags$table(makeStyledTrTag(keyboardRow2Vector()),
-          #                            class = "kbd")),
-          # fluidRow(tags$table(makeStyledTrTag(keyboardRow3Vector()),
-          #                            class = "kbd"))
-          
           fluidRow(makeStyledKeyboardTableRow(keyboardRow1Vector())),
           fluidRow(makeStyledKeyboardTableRow(keyboardRow2Vector())),
           fluidRow(makeStyledKeyboardTableRow(keyboardRow3Vector()))
@@ -46,8 +39,6 @@ ui <- fluidPage(
     )
 )
 
-# NOTE! This is named "Keystroke" but it is only for alphabetical keys!
-# "ENTER" and "DELETE" have their own handlers.
 handleLetterKey <- function(rVals, aLetter) {
   if (rVals$guessNumber < 7) {
     if (rVals$nKeys < 5) {
@@ -83,6 +74,11 @@ updateKeyClasses <- function(sought, guessNumber, guesses, keyClasses) {
   return(keyClasses)
 }
 
+observeLetterEvent <- function(aLetter, inputList, valuesList) {
+  inputIndex <- paste0("typed", aLetter)
+  observeEvent(inputList[[inputIndex]], {valuesList <- handleLetterKey(valuesList, aLetter)})
+}
+
 # Define server logic for the game
 server <- function(input, output) {
   
@@ -98,110 +94,9 @@ server <- function(input, output) {
                                             Modified = FALSE),
                         NeedsDisplay = FALSE,
                         Solved = FALSE)
-    
-    observeEvent(input$typedA, {
-      r <- handleLetterKey(r, "A")
-    })
-    
-    observeEvent(input$typedB, {
-      r <- handleLetterKey(r, "B")
-    })
-    
-    observeEvent(input$typedC, {
-      r <- handleLetterKey(r, "C")
-    })
-    
-    observeEvent(input$typedD, {
-      r <- handleLetterKey(r, "D")
-    })
-    
-    observeEvent(input$typedE, {
-      r <- handleLetterKey(r, "E")
-    })
-    
-    observeEvent(input$typedF, {
-      r <- handleLetterKey(r, "F")
-    })
-    
-    observeEvent(input$typedG, {
-      r <- handleLetterKey(r, "G")
-    })
-    
-    observeEvent(input$typedH, {
-      r <- handleLetterKey(r, "H")
-    })
-    
-    observeEvent(input$typedI, {
-      r <- handleLetterKey(r, "I")
-    })
-    
-    observeEvent(input$typedJ, {
-      r <- handleLetterKey(r, "J")
-    })
-    
-    observeEvent(input$typedK, {
-      r <- handleLetterKey(r, "K")
-    })
-    
-    observeEvent(input$typedL, {
-      r <- handleLetterKey(r, "L")
-    })
-    
-    observeEvent(input$typedM, {
-      r <- handleLetterKey(r, "M")
-    })
-    
-    observeEvent(input$typedN, {
-      r <- handleLetterKey(r, "N")
-    })
-    
-    observeEvent(input$typedO, {
-      r <- handleLetterKey(r, "O")
-    })
-    
-    observeEvent(input$typedP, {
-      r <- handleLetterKey(r, "P")
-    })
-    
-    observeEvent(input$typedQ, {
-      r <- handleLetterKey(r, "Q")
-    })
-    
-    observeEvent(input$typedR, {
-      r <- handleLetterKey(r, "R")
-    })
-    
-    observeEvent(input$typedS, {
-      r <- handleLetterKey(r, "S")
-    })
-    
-    observeEvent(input$typedT, {
-      r <- handleLetterKey(r, "T")
-    })
-    
-    observeEvent(input$typedU, {
-      r <- handleLetterKey(r, "U")
-    })
-    
-    observeEvent(input$typedV, {
-      r <- handleLetterKey(r, "V")
-    })
-    
-    observeEvent(input$typedW, {
-      r <- handleLetterKey(r, "W")
-    })
-    
-    observeEvent(input$typedX, {
-      r <- handleLetterKey(r, "X")
-    })
-    
-    observeEvent(input$typedY, {
-      r <- handleLetterKey(r, "Y")
-    })
-    
-    observeEvent(input$typedZ, {
-      r <- handleLetterKey(r, "Z")
-    })
+
+    lapply(unlist(str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "")),
+           function(aLetter) observeLetterEvent(aLetter, input, r))
     
     observeEvent(input$typedENTER, {
       if (r$nKeys < 5) {
