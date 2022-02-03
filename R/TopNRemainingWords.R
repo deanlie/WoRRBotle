@@ -1,6 +1,299 @@
-topNRemainingWords <- function(sought, guessVector, nGuesses, nToKeep) {
- paste(paste(tags$h4("Suggestions", class="suggestions"),
-             tags$p("STAIR", class="suggestions"),
-             tags$p("STARE", class="suggestions"),
-             tags$p("PASTS", class="suggestions")))
+source("R/words.R")
+source("R/EvaluateAGuess.R")
+
+probe_from_guess <- function(correct, guessed) {
+  return(paste(guessed, evaluate_a_guess(correct, guessed), sep = ""))
 }
+
+pattern_for_match <- function(matchLetter, position, wordLength = 5) {
+  # Pattern will be "^.a...$"
+  dots <- rep(".", times = wordLength)
+  dots[position] <- matchLetter
+  thePattern <- paste(c("^", dots, "$"), sep = "", collapse = "")
+}
+
+pattern_for_not_here <- function(matchLetter, position, wordLength = 5) {
+  thePattern <- matchLetter
+}
+
+negative_pattern_for_not_here <- function(matchLetter, position, wordLength = 5) {
+  return(pattern_for_match(matchLetter, position, wordLength = 5))
+}
+
+negative_pattern_for_nowhere <- function(aProbe, position, wordLength = 5) {
+  matchLetter <- substr(aProbe, position, position)
+  mungedProbe <- aProbe
+  substr(mungedProbe, position, position) <- ""
+  
+  thePattern <- matchLetter
+  if (str_detect(mungedProbe, thePattern)) {
+    # We can't just reject anything with this letter! The "not here" is only
+    #  telling us that there aren't two of them. And of course, it's really worse...
+  }
+}
+
+filter_words_by_pattern <- function(aPattern, aVectorOfWords, negate = FALSE) {
+  wordsWithPattern <- aVectorOfWords[str_detect(aVectorOfWords, aPattern, negate)]
+}
+
+possibilities_from_one_probe_letter <- function(vectorOfWords, aProbe, i,
+                                                traceThisRoutine = FALSE, prepend = "") {
+  # OUCH change tracing based on did anything get eliminated!
+  myPrepend = paste("  ", prepend, sep = "")
+  traceFlagOnEntry <- traceThisRoutine
+  # if (traceFlagOnEntry) {
+  #   cat(file = stderr(), prepend, "Entered possibilities_from_one_probe_letter\n")
+  # }
+  
+  wordLength <- as.integer(str_length(aProbe) / 2.0)
+  if (wordLength * 2 != str_length(aProbe)) {
+    stop("probe ", aProbe, " length is not even!")
+  }
+  
+  # if (traceThisRoutine) {
+  #   cat(file = stderr(), myPrepend, "Filtering by letter", i, "of probe", aProbe, "\n")    
+  # }
+  
+  probeLetter <- substr(aProbe, i, i)
+  probeDatum <- substr(aProbe, i + wordLength, i + wordLength)
+  remainingWords <- vectorOfWords
+  if (length(remainingWords) > 1) {
+    if (probeDatum == "G" || probeDatum == "g") {
+      n_before <- length(remainingWords)
+      remainingWords <- filter_words_by_pattern(pattern_for_match(probeLetter,
+                                                                  i,
+                                                                  wordLength),
+                                                remainingWords, negate = FALSE)
+      
+      if (traceThisRoutine) {
+        if (n_before > length(remainingWords)) {
+          cat(file = stderr(), myPrepend, " Must have '", probeLetter,
+              "' in position ", i, ": ",
+              length(remainingWords), sep = "")
+          if (length(remainingWords) == 1) {
+            cat(file = stderr(), " word is left.\n", sep = "") 
+          } else {
+            cat(file = stderr(), " words are left.\n", sep ="") 
+          }
+          if (length(remainingWords) < 21) {
+            for (j in 1:length(remainingWords)) {
+              cat(file = stderr(), myPrepend, remainingWords[j], "\n")
+            }
+          }
+        } else {
+          cat(file = stderr(), myPrepend, " Nothing removed by correct '", probeLetter,
+              "' in position ", i, "\n", sep = "")    
+        }
+      }
+      if (length(remainingWords) == 0) {
+        stop("1. Nothing left after requiring correct letter")
+      }
+    } else {
+      if (probeDatum == "Y" || probeDatum == "y") {
+        n_before <- length(remainingWords)
+        remainingWords <- filter_words_by_pattern(pattern_for_not_here(probeLetter,
+                                                                       i,
+                                                                       wordLength),
+                                                  remainingWords, negate = FALSE)
+        if (traceThisRoutine) {
+          if (n_before > length(remainingWords)) {
+            cat(file = stderr(), myPrepend,
+                " Must have '", probeLetter,
+                "' somewhere: ",
+                length(remainingWords), sep = "")
+            if (length(remainingWords) == 1) {
+              cat(file = stderr(), " word is left.\n", sep = "") 
+            } else {
+              cat(file = stderr(), " words are left.\n", sep = "") 
+            }
+            if (length(remainingWords) < 21) {
+              for (j in 1:length(remainingWords)) {
+                cat(file = stderr(), myPrepend, remainingWords[j], "\n")
+              }
+            }
+          } else {
+            cat(file = stderr(), myPrepend, " Nothing removed by needing '", probeLetter,
+                "' (in probe position ", i, ") somewhere\n", sep = "")    
+          }
+        }
+        if (length(remainingWords) == 0) {
+          stop("2. Nothing left after requiring somewhere letter")
+        }
+        n_before <- length(remainingWords)
+        remainingWords <- filter_words_by_pattern(negative_pattern_for_not_here(aProbe,
+                                                                                i,
+                                                                                wordLength),
+                                                  remainingWords, negate = TRUE)
+        
+        if (traceThisRoutine) {
+          if (n_before > length(remainingWords)) {
+            cat(file = stderr(), myPrepend,
+                " Can't have '", probeLetter,
+                "' at position ", i, ": ",
+                length(remainingWords), sep = "")
+            if (length(remainingWords) == 1) {
+              cat(file = stderr(), " word is left.\n", sep = "") 
+            } else {
+              cat(file = stderr(), " words are left.\n", sep = "") 
+            }
+            if (length(remainingWords) < 21) {
+              for (j in 1:length(remainingWords)) {
+                cat(file = stderr(), myPrepend, remainingWords[j], "\n")
+              }
+            }
+          } else {
+            cat(file = stderr(), myPrepend, " Nothing removed by not allowing '", probeLetter,
+                "' at probe position ", i, "\n", sep = "")    
+          }
+        }
+        if (length(remainingWords) == 0) {
+          stop("3. Nothing left after removing letter in incorrect place")
+        }
+      } else {
+        n_before <- length(remainingWords)
+        remainingWords <- filter_words_by_pattern(negative_pattern_for_nowhere(theGuess,
+                                                                               i,
+                                                                               wordLength),
+                                                  remainingWords, negate = TRUE)
+        
+        if (traceThisRoutine) {
+          if (n_before > length(remainingWords)) {
+            cat(file = stderr(), myPrepend, " Can't have '", probeLetter,
+                "' anywhere: ",
+                length(remainingWords), sep ="")
+            if (length(remainingWords) == 1) {
+              cat(file = stderr(), " word is left.\n", sep ="") 
+            } else {
+              cat(file = stderr(), " words are left.\n", sep ="") 
+            }
+            if (length(remainingWords) < 40) { # OUCH should be 21
+              for (j in 1:length(remainingWords)) {
+                cat(file = stderr(), myPrepend, remainingWords[j], "\n")
+              }
+            }
+          } else {
+            cat(file = stderr(), myPrepend, " Nothing removed by not allowing '", probeLetter,
+                "' (in probe position ", i, ") anywhere\n", sep = "")    
+          }
+        }
+      }
+      if (length(remainingWords) == 0) {
+        stop("4. Nothing left after removing incorrect letter")
+      }
+    }
+  }  
+  # if (traceFlagOnEntry) {
+  #   cat(file = stderr(), prepend, "Leaving possibilities_from_one_probe_letter\n")
+  # }
+  return(remainingWords)
+}
+
+possibilities_from_one_probe <- function(vectorOfWords, aProbe,
+                                         traceThisRoutine = FALSE, prepend = "") {
+  myPrepend = paste("  ", prepend, sep = "")
+  traceFlagOnEntry <- traceThisRoutine
+  if (traceFlagOnEntry) {
+    cat(file = stderr(), prepend, "Entered possibilities_from_one_probe\n")
+  }
+  
+  remainingWords <- vectorOfWords
+  
+  wordLength <- as.integer(str_length(aProbe) / 2.0)
+  if (wordLength * 2 != str_length(aProbe)) {
+    stop("probe ", aProbe, " length is not even!")
+  }
+  
+  for (i in 1:wordLength) {
+    remainingWords <- possibilities_from_one_probe_letter(remainingWords, aProbe, i,
+                                                          traceThisRoutine = traceThisRoutine,
+                                                          prepend = myPrepend)
+    # if (traceThisRoutine) {
+    #   cat(file = stderr(), myPrepend, "After", i, "letter(s),",
+    #       length(remainingWords), "words are left.\n")
+    #   if (length(remainingWords) < 21) {
+    #     for (j in 1:length(remainingWords)) {
+    #       cat(file = stderr(), myPrepend, remainingWords[j], "\n")
+    #     }
+    #   }
+    # }
+  }
+  
+  if (traceFlagOnEntry) {
+    cat(file = stderr(), prepend, "Leaving possibilities_from_one_probe\n")
+  }
+  
+  return(remainingWords)
+}
+
+possibilities_from_history <- function(theProbes, vectorOfWords = NULL,
+                                       traceThisRoutine = FALSE, prepend = "") {
+  # theProbes is a vector of <2 * wordLength>-character feedback words which are
+  # <wordLength> characters of guess, <wordLength> characters of response
+  # given as GYx, green, yellow, miss
+  myPrepend = paste("  ", prepend, sep = "")
+  traceFlagOnEntry <- traceThisRoutine
+  if (traceFlagOnEntry) {
+    cat(file = stderr(), prepend, "Entered possibilities_from_history\n")
+  }
+  
+  if (traceThisRoutine) {
+    # cat(file = stderr(), myPrepend, "\n")    
+  }
+  wordLength <- as.integer(str_length(theProbes[1]) / 2.0)
+  if (wordLength * 2 != str_length(theProbes[1])) {
+    stop("probe ", theProbes[1], " length is not even!")
+  }
+  
+  if (is.null(vectorOfWords)) {
+    vectorOfWords <- get_words_of_given_length(wordLength)
+  }
+  for (i in 1:length(theProbes)) {
+    if (length(vectorOfWords) > 1) {
+      vectorOfWords <- possibilities_from_one_probe(vectorOfWords, theProbes[i],
+                                                    traceThisRoutine = traceThisRoutine,
+                                                    prepend = myPrepend)
+    }
+  }
+  # theProbes is a vector of <2 * wordLength>-character feedback words which are
+  # <wordLength> characters of guess, <wordLength> characters of response
+  # given as GYx, green, yellow, miss
+  
+  if (traceFlagOnEntry) {
+    cat(file = stderr(), prepend, "Leaving possibilities_from_history\n")
+  }
+  
+  return(vectorOfWords)
+}
+
+topNRemainingWords <- function(sought, guessVector, nGuesses, nToKeep) {
+  remainingWords <- str_to_upper(wordle_dict)
+
+  theProbes <- vector()
+  for (i in 1:nGuesses) {
+    theProbes[i] <- probe_from_guess(sought, guessVector[i])
+  }
+  
+  remainingWords <- possibilities_from_history(theProbes,
+                                               vectorOfWords = remainingWords,
+                                               traceThisRoutine = TRUE,
+                                               prepend = "")
+  
+  # OUCH sort remaining words by probability of something or other
+  if (length(remainingWords) > nToKeep) {
+    remainingWords <- remainingWords[1:nToKeep]
+  }
+  
+  listOfPTags <- lapply(remainingWords,
+                        function(aWord) tags$p(aWord, class = "suggestions"))
+  
+  paste(tags$h4("Suggestions", class="suggestions"),
+              tags$p("STAIR", class="suggestions"),
+              tags$p("STARE", class="suggestions"),
+              tags$p("PASTS", class="suggestions"))
+}
+
+test <- function() {
+  topNRemainingWords("PANIC", c("PASTA", "PAINS"), 2, 25)
+}
+
+test()
