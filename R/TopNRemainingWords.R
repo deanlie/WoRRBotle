@@ -33,7 +33,15 @@ negative_pattern_for_nowhere <- function(aProbe, position, wordLength = 5) {
 }
 
 filter_words_by_pattern <- function(aPattern, aVectorOfWords, negate = FALSE) {
-  wordsWithPattern <- aVectorOfWords[str_detect(aVectorOfWords, aPattern, negate)]
+  message("filter_words_by_pattern, aPattern = ", aPattern,
+          ", length(aVectorOfWords = ", length(aVectorOfWords))
+  if ((!is.null(aPattern)) && length(aPattern) > 0) {
+    message("in str_detect branch")
+    wordsWithPattern <- aVectorOfWords[str_detect(aVectorOfWords, aPattern, negate)]
+  } else {
+    wordsWithPattern <- aVectorOfWords
+  }
+  return(wordsWithPattern)
 }
 
 possibilities_from_one_probe_letter <- function(vectorOfWords, aProbe, i,
@@ -41,9 +49,10 @@ possibilities_from_one_probe_letter <- function(vectorOfWords, aProbe, i,
   # OUCH change tracing based on did anything get eliminated!
   myPrepend = paste("  ", prepend, sep = "")
   traceFlagOnEntry <- traceThisRoutine
-  # if (traceFlagOnEntry) {
-  #   cat(file = stderr(), prepend, "Entered possibilities_from_one_probe_letter\n")
-  # }
+  if (traceFlagOnEntry) {
+    message(prepend, "Entered possibilities_from_one_probe_letter")
+    message(prepend, "aProbe = ", aProbe, "  i = ", i)
+  }
   
   wordLength <- as.integer(str_length(aProbe) / 2.0)
   if (wordLength * 2 != str_length(aProbe)) {
@@ -56,6 +65,7 @@ possibilities_from_one_probe_letter <- function(vectorOfWords, aProbe, i,
   
   probeLetter <- substr(aProbe, i, i)
   probeDatum <- substr(aProbe, i + wordLength, i + wordLength)
+  theGuess <- substr(aProbe, 1, wordLength)
   remainingWords <- vectorOfWords
   if (length(remainingWords) > 1) {
     if (probeDatum == "G" || probeDatum == "g") {
@@ -268,32 +278,34 @@ possibilities_from_history <- function(theProbes, vectorOfWords = NULL,
 topNRemainingWords <- function(sought, guessVector, nGuesses, nToKeep) {
   remainingWords <- str_to_upper(wordle_dict)
 
+  message("topNRemainingWords, nGuesses = ", nGuesses)
+  
   theProbes <- vector()
-  for (i in 1:nGuesses) {
-    theProbes[i] <- probe_from_guess(sought, guessVector[i])
+  if (nGuesses > 1) {
+    for (i in 1:(nGuesses - 1)) {
+      message("guessVector[", i, "] = ", guessVector[i])
+      theProbes[i] <- probe_from_guess(sought, guessVector[i])
+    }
+
+    remainingWords <- possibilities_from_history(theProbes,
+                                                 vectorOfWords = remainingWords,
+                                                 traceThisRoutine = TRUE,
+                                                 prepend = "")
   }
-  
-  remainingWords <- possibilities_from_history(theProbes,
-                                               vectorOfWords = remainingWords,
-                                               traceThisRoutine = TRUE,
-                                               prepend = "")
-  
+    
   # OUCH sort remaining words by probability of something or other
   if (length(remainingWords) > nToKeep) {
-    remainingWords <- remainingWords[1:nToKeep]
+    remainingWords <- head(remainingWords, nToKeep)
   }
   
   listOfPTags <- lapply(remainingWords,
-                        function(aWord) tags$p(aWord, class = "suggestions"))
+                        function(aWord) as.character(tags$p(aWord,
+                                                            class = "suggestions")))
   
-  paste(tags$h4("Suggestions", class="suggestions"),
-              tags$p("STAIR", class="suggestions"),
-              tags$p("STARE", class="suggestions"),
-              tags$p("PASTS", class="suggestions"))
+  paste(tags$h4("Suggestions will go here", class="suggestions"),
+        paste(unlist(listOfPTags), collapse = ""))
 }
 
 test <- function() {
   topNRemainingWords("PANIC", c("PASTA", "PAINS"), 2, 25)
 }
-
-test()

@@ -51,3 +51,22 @@ letterTableToDisplay <- function(sought, guessArray, incompleteWordIndex) {
              sep=""))
 }
 
+kbdRowToDisplay <- function(letterSequence, keyClasses) {
+  letters <- unlist(str_split(letterSequence, ""))
+  message("in kbdRowToDisplay")
+  trArg <- ""
+  for (letter in letters) {
+    trArg <- paste(trArg, styledButtonForKeyboardLetter(letter, keyClasses), sep = "\n")
+  }
+  # NO, displays &lt; HTML(paste("  ", tags$table(tags$tr(trArg), class="kbd"), sep=""))
+  # NO, displays &lt; HTML(as.character(tags$table(tags$tr(trArg), class="kbd")))
+  # NO, not a char vector: HTML(tags$table(tags$tr(trArg), class="kbd"))
+  # NO, not a char vector: HTML(tags$table(tags$tr(HTML(trArg)), class="kbd"), sep="")
+  # YES: HTML(paste("  ", tags$table(tags$tr(HTML(trArg)), class="kbd"), sep=""))
+  # YES: HTML(paste("", tags$table(tags$tr(HTML(trArg)), class="kbd"), sep=""))
+  
+  # This shows colored borders around action buttons after "enter",
+  # but with the whole table row left-aligned.
+  HTML(paste(tags$table(tags$tr(HTML(trArg)), class="kbd"), sep=""))
+}
+
