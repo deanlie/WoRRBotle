@@ -188,8 +188,7 @@ server <- function(input, output) {
     })
     
     output$somePossibleWords <- renderUI({
-      HTML(topNRemainingWords(input$Sought, r$Guesses, r$guessNumber, 25,
-                              r$theWords))
+      HTML(topNRemainingWords(r$theWords, 25))
     })
 }
 
