@@ -1,6 +1,5 @@
 {
   "input": {
-    "Guess1": "",
     "Sought": "PANIC",
     "typedA": 2,
     "typedB": 0,
@@ -40,6 +39,12 @@
     },
     "letterTable": {
       "html": "<h4>Guesses<\/h4><div>\n  <table class=\"guesses\">\n    <tr>\n      <td class=\"not_entered guesses\">P<\/td>\n      <td class=\"not_entered guesses\">A<\/td>\n      <td class=\"not_entered guesses\">S<\/td>\n      <td class=\"not_entered guesses\">T<\/td>\n      <td class=\"not_entered guesses\">A<\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n  <\/table>\n<\/div>",
+      "deps": [
+
+      ]
+    },
+    "somePossibleWords": {
+      "html": "<h4 class=\"suggestions\">Suggestions will go here<\/h4> <p class=\"suggestions\">AAHED<\/p><p class=\"suggestions\">AALII<\/p><p class=\"suggestions\">AARGH<\/p><p class=\"suggestions\">AARTI<\/p><p class=\"suggestions\">ABACA<\/p><p class=\"suggestions\">ABACI<\/p><p class=\"suggestions\">ABACK<\/p><p class=\"suggestions\">ABACS<\/p><p class=\"suggestions\">ABAFT<\/p><p class=\"suggestions\">ABAKA<\/p><p class=\"suggestions\">ABAMP<\/p><p class=\"suggestions\">ABAND<\/p><p class=\"suggestions\">ABASE<\/p><p class=\"suggestions\">ABASH<\/p><p class=\"suggestions\">ABASK<\/p><p class=\"suggestions\">ABATE<\/p><p class=\"suggestions\">ABAYA<\/p><p class=\"suggestions\">ABBAS<\/p><p class=\"suggestions\">ABBED<\/p><p class=\"suggestions\">ABBES<\/p><p class=\"suggestions\">ABBEY<\/p><p class=\"suggestions\">ABBOT<\/p><p class=\"suggestions\">ABCEE<\/p><p class=\"suggestions\">ABEAM<\/p><p class=\"suggestions\">ABEAR<\/p>",
       "deps": [
 
       ]

@@ -1,6 +1,5 @@
 {
   "input": {
-    "Guess1": "",
     "Sought": "PANIC",
     "typedA": 0,
     "typedB": 0,
@@ -40,6 +39,12 @@
     },
     "letterTable": {
       "html": "<h4>Guesses<\/h4><div>\n  <table class=\"guesses\">\n    <tr>\n      <td class=\"correct guesses\">P<\/td>\n      <td class=\"correct guesses\">A<\/td>\n      <td class=\"absent guesses\">S<\/td>\n      <td class=\"absent guesses\">T<\/td>\n      <td class=\"absent guesses\">A<\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n  <\/table>\n<\/div>",
+      "deps": [
+
+      ]
+    },
+    "somePossibleWords": {
+      "html": "<h4 class=\"suggestions\">Suggestions will go here<\/h4> <p class=\"suggestions\">PAALS<\/p><p class=\"suggestions\">PAANS<\/p><p class=\"suggestions\">PACAS<\/p><p class=\"suggestions\">PACED<\/p><p class=\"suggestions\">PACER<\/p><p class=\"suggestions\">PACES<\/p><p class=\"suggestions\">PACEY<\/p><p class=\"suggestions\">PACHA<\/p><p class=\"suggestions\">PACKS<\/p><p class=\"suggestions\">PACOS<\/p><p class=\"suggestions\">PACTA<\/p><p class=\"suggestions\">PACTS<\/p><p class=\"suggestions\">PADDY<\/p><p class=\"suggestions\">PADIS<\/p><p class=\"suggestions\">PADLE<\/p><p class=\"suggestions\">PADMA<\/p><p class=\"suggestions\">PADRE<\/p><p class=\"suggestions\">PADRI<\/p><p class=\"suggestions\">PAEAN<\/p><p class=\"suggestions\">PAEDO<\/p><p class=\"suggestions\">PAEON<\/p><p class=\"suggestions\">PAGAN<\/p><p class=\"suggestions\">PAGED<\/p><p class=\"suggestions\">PAGER<\/p><p class=\"suggestions\">PAGES<\/p>",
       "deps": [
 
       ]
