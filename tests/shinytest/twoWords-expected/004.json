@@ -44,7 +44,7 @@
       ]
     },
     "somePossibleWords": {
-      "html": "<h4 class=\"suggestions\">Suggestions will go here<\/h4> <p class=\"suggestions\">PAINS<\/p><p class=\"suggestions\">PAINT<\/p><p class=\"suggestions\">PANIC<\/p><p class=\"suggestions\">PANIM<\/p><p class=\"suggestions\">PANNI<\/p><p class=\"suggestions\">PATIN<\/p><p class=\"suggestions\">PAVIN<\/p>",
+      "html": "<h4 class=\"suggestions\">Suggestions:<\/h4> <p class=\"suggestions\">PANIC<\/p><p class=\"suggestions\">PANIM<\/p><p class=\"suggestions\">PAVIN<\/p>",
       "deps": [
 
       ]
