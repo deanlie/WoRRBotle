@@ -51,7 +51,7 @@ handleLetterKey <- function(rVals, aLetter) {
   return(rVals)
 }
 
-updateKeyClasses <- function(sought, lastGuess, keyClasses) {
+updateKeyClasses0 <- function(sought, lastGuess, keyClasses) {
   code = evaluate_a_guess(sought, lastGuess)
   for (i in 1:5) {
     class <- classFromCode(code, i)
@@ -66,9 +66,9 @@ updateKeyClasses <- function(sought, lastGuess, keyClasses) {
   return(keyClasses)
 }
 
-updateKeyClasses2 <- function(code,
-                              lastGuess,
-                              keyClasses) {
+updateKeyClasses <- function(code,
+                             lastGuess,
+                             keyClasses) {
   for (i in 1:5) {
     class <- classFromResponse(code, i)
     letter <- substr(lastGuess, i, i)
@@ -137,13 +137,9 @@ server <- function(input, output) {
           message("calling try(", lcNewGuess, ")")
           response <- r$theGame$try(lcNewGuess)
           r$nKeys <- 0
-          KeyClasses <- updateKeyClasses(input$Sought,
-                                          r$Guesses[r$guessNumber],
-                                          r$KeyClasses)
-          # KeyClasses2 <- updateKeyClasses2(response,
-          #                                  r$Guesses[r$guessNumber],
-          #                                  r$KeyClasses)
-          r$KeyClasses <- KeyClasses
+          r$KeyClasses <- updateKeyClasses(response,
+                                           r$Guesses[r$guessNumber],
+                                           r$KeyClasses)
           r$guessNumber <- r$guessNumber + 1
        } else {
           message("No more guesses! Sorry, you lost.")
@@ -163,7 +159,8 @@ server <- function(input, output) {
     output$letterTable <- renderUI({
       letterTableToDisplay(input$Sought,
                            r$Guesses,
-                           r$guessNumber)
+                           r$guessNumber,
+                           r$KeyClasses)
     })
     
     output$keyboardTables <- renderUI({

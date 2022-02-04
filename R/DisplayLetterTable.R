@@ -57,7 +57,7 @@ guessTableToDisplay <- function(sought, guessArray, incompleteWordIndex) {
              class = "guesses")
 }
 
-letterTableToDisplay <- function(sought, guessArray, incompleteWordIndex) {
+letterTableToDisplay <- function(sought, guessArray, incompleteWordIndex, KeyClasses) {
   HTML(paste(tags$h4("Guesses"),
              tags$div(guessTableToDisplay(sought, guessArray, incompleteWordIndex)),
              sep=""))
