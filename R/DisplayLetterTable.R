@@ -13,6 +13,18 @@ classFromCode <- function(codes, position) {
   }
 }
 
+classFromResponse <- function(responses, position) {
+  if (responses[position] == "green") {
+    return("correct")
+  } else {
+    if (responses[position] == "yellow") {
+      return("wrong_place")
+    } else {
+      return("absent")
+    }
+  }
+}
+
 guessCellToDisplay <- function(guessed, position, codes, scoreIt) {
   if (scoreIt) {
     theClasses <- paste(classFromCode(codes, position), "guesses")

@@ -9,6 +9,8 @@
 
 library(shiny)
 library(tidyverse)
+library(lubridate)
+library(wordle)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -49,11 +51,26 @@ handleLetterKey <- function(rVals, aLetter) {
   return(rVals)
 }
 
-updateKeyClasses <- function(sought, guessNumber, guesses, keyClasses) {
-  lastGuess <- guesses[guessNumber]
+updateKeyClasses <- function(sought, lastGuess, keyClasses) {
   code = evaluate_a_guess(sought, lastGuess)
   for (i in 1:5) {
     class <- classFromCode(code, i)
+    letter <- substr(lastGuess, i, i)
+    indexVector <- (keyClasses[["Letter"]] == letter)
+    currentCode <- keyClasses$BestClass[indexVector]
+    if ((currentCode == "unknown") ||
+        ((currentCode == "wrong_place") && (class == "correct"))) {
+      keyClasses$BestClass[indexVector] <- class
+    }
+  }
+  return(keyClasses)
+}
+
+updateKeyClasses2 <- function(code,
+                              lastGuess,
+                              keyClasses) {
+  for (i in 1:5) {
+    class <- classFromResponse(code, i)
     letter <- substr(lastGuess, i, i)
     indexVector <- (keyClasses[["Letter"]] == letter)
     currentCode <- keyClasses$BestClass[indexVector]
@@ -76,18 +93,38 @@ server <- function(input, output) {
     r <- reactiveValues(nKeys = 0,
                         Guess = "     ",
                         guessNumber = 1,
-                        Guesses = c("     ", "     ", "     ",
-                                    "     ", "     ", "     "),
+                        Guesses = rep("     ", 6),
                         KeyClasses = tibble(Letter = unlist(
-                                              str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                                                        boundary("character"))),
-                                            BestClass = "unknown",
-                                            Modified = FALSE),
-                        NeedsDisplay = FALSE,
-                        Solved = FALSE)
+                          str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                                    boundary("character"))),
+                          BestClass = "unknown",
+                          Modified = FALSE),
+                        theGame = WordleGame$new(wordle_dict,
+                                                 debug = TRUE,
+                                                 # 
+                                                 target_word = 
+                                                   wordle_solns[today("EST") -
+                                                                as.Date("2021-06-19")]))
 
     lapply(unlist(str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "")),
            function(aLetter) observeLetterEvent(aLetter, input, r))
+    
+    observeEvent(input$Sought, {
+      if(str_length(input$Sought) == 5) {
+        message("Observed change in input$Sought, new value is '", input$Sought, "'")
+        r$nKeys <- 0
+        r$guessNumber = 1
+        r$Guesses <- rep("     ", 6)
+        r$KeyClasses <- tibble(Letter = unlist(
+          str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                    boundary("character"))),
+          BestClass = "unknown",
+          Modified = FALSE)
+        r$theGame <- WordleGame$new(wordle_dict,
+                                    debug = TRUE,
+                                    target_word = str_to_lower(input$Sought))
+      }
+    })
     
     observeEvent(input$typedENTER, {
       if (r$nKeys < 5) {
@@ -95,12 +132,19 @@ server <- function(input, output) {
       } else {
         # Score that, update keyboard status, and redisplay all letter rows
         if (r$guessNumber < 7) {
+          newGuess <- r$Guesses[r$guessNumber]
+          lcNewGuess <- str_to_lower(newGuess)
+          message("calling try(", lcNewGuess, ")")
+          response <- r$theGame$try(lcNewGuess)
           r$nKeys <- 0
-          r$KeyClasses <- updateKeyClasses(input$Sought,
-                                           r$guessNumber, 
-                                           r$Guesses,
-                                           r$KeyClasses)
-           r$guessNumber <- r$guessNumber + 1
+          KeyClasses <- updateKeyClasses(input$Sought,
+                                          r$Guesses[r$guessNumber],
+                                          r$KeyClasses)
+          # KeyClasses2 <- updateKeyClasses2(response,
+          #                                  r$Guesses[r$guessNumber],
+          #                                  r$KeyClasses)
+          r$KeyClasses <- KeyClasses
+          r$guessNumber <- r$guessNumber + 1
        } else {
           message("No more guesses! Sorry, you lost.")
           # OUCH Game is over!

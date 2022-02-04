@@ -61,7 +61,7 @@ possibilities_from_guesses <- function(theTarget, theGuesses, vectorOfWords = NU
     theProbes[i] <- probe_from_guess(theTarget, theGuesses[i])
   }
   possibilities_from_history(theProbes, vectorOfWords = vectorOfWords,
-                             traceThisRoutine = traceThisRoutine, prepend = myPrepend)
+                             debug = traceThisRoutine, prepend = myPrepend)
 }
 
 testFilter <- function(switchArg) {
