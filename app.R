@@ -90,7 +90,8 @@ observeLetterEvent <- function(aLetter, inputList, valuesList) {
 # Define server logic for the game
 server <- function(input, output) {
   
-    r <- reactiveValues(nKeys = 0,
+    r <- reactiveValues(nKeys = 0, # Which column does a new keypress go in
+                        Done = FALSE, # When TRUE we won't ask the game agai
                         Guess = "     ",
                         guessNumber = 1,
                         Guesses = rep("     ", 6),
@@ -123,6 +124,7 @@ server <- function(input, output) {
         r$theGame <- WordleGame$new(wordle_dict,
                                     debug = TRUE,
                                     target_word = str_to_lower(input$Sought))
+        r$Done <- FALSE
       }
     })
     
@@ -131,16 +133,20 @@ server <- function(input, output) {
         message("You can't enter an incomplete guess!")
       } else {
         # Score that, update keyboard status, and redisplay all letter rows
-        if (r$guessNumber < 7) {
+        if (r$guessNumber < 7 && !r$Done) {
           newGuess <- r$Guesses[r$guessNumber]
           lcNewGuess <- str_to_lower(newGuess)
           message("calling try(", lcNewGuess, ")")
           response <- r$theGame$try(lcNewGuess)
+          # OUCH watch out for "all done" state here
           r$nKeys <- 0
           r$KeyClasses <- updateKeyClasses(response,
                                            r$Guesses[r$guessNumber],
                                            r$KeyClasses)
           r$guessNumber <- r$guessNumber + 1
+          if (allDoneFromResponse(response)) {
+            r$Done <- TRUE
+          }
        } else {
           message("No more guesses! Sorry, you lost.")
           # OUCH Game is over!
@@ -160,7 +166,8 @@ server <- function(input, output) {
       letterTableToDisplay(input$Sought,
                            r$Guesses,
                            r$guessNumber,
-                           r$theGame)
+                           r$theGame,
+                           r$Done)
     })
     
     output$keyboardTables <- renderUI({

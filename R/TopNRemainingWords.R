@@ -288,7 +288,7 @@ topNRemainingWords <- function(sought, guessVector, nGuesses, nToKeep, debug = F
 
     remainingWords <- possibilities_from_history(theProbes,
                                                  vectorOfWords = remainingWords,
-                                                 debug = TRUE,
+                                                 debug = debug,
                                                  prepend = "")
   }
     
