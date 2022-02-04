@@ -47,7 +47,7 @@ guessRowToDisplay <- function(sought, guess, row_index, incompleteWordIndex) {
           guessCellToDisplay(guess, 5, codes, scoreIt))
 }
 
-guessTableToDisplay <- function(sought, guessArray, incompleteWordIndex) {
+guessTableToDisplay <- function(sought, guessArray, incompleteWordIndex, theGame) {
   tags$table(guessRowToDisplay(sought, guessArray[1], 1, incompleteWordIndex),
              guessRowToDisplay(sought, guessArray[2], 2, incompleteWordIndex),
              guessRowToDisplay(sought, guessArray[3], 3, incompleteWordIndex),
@@ -57,9 +57,9 @@ guessTableToDisplay <- function(sought, guessArray, incompleteWordIndex) {
              class = "guesses")
 }
 
-letterTableToDisplay <- function(sought, guessArray, incompleteWordIndex, KeyClasses) {
+letterTableToDisplay <- function(sought, guessArray, incompleteWordIndex, theGame) {
   HTML(paste(tags$h4("Guesses"),
-             tags$div(guessTableToDisplay(sought, guessArray, incompleteWordIndex)),
+             tags$div(guessTableToDisplay(sought, guessArray, incompleteWordIndex, theGame)),
              sep=""))
 }
 

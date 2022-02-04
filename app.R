@@ -160,7 +160,7 @@ server <- function(input, output) {
       letterTableToDisplay(input$Sought,
                            r$Guesses,
                            r$guessNumber,
-                           r$KeyClasses)
+                           r$theGame)
     })
     
     output$keyboardTables <- renderUI({
