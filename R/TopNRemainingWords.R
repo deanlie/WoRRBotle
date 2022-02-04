@@ -272,25 +272,27 @@ possibilities_from_history <- function(theProbes, vectorOfWords = NULL,
   return(vectorOfWords)
 }
 
-topNRemainingWords <- function(sought, guessVector, nGuesses, nToKeep, debug = FALSE) {
-  remainingWords <- str_to_upper(wordle_dict)
-
-  if (debug) {
-    message("topNRemainingWords, nGuesses = ", nGuesses)
-  }
-
-  theProbes <- vector()
-  if (nGuesses > 1) {
-    for (i in 1:(nGuesses - 1)) {
-      message("guessVector[", i, "] = ", guessVector[i])
-      theProbes[i] <- probe_from_guess(sought, guessVector[i])
-    }
-
-    remainingWords <- possibilities_from_history(theProbes,
-                                                 vectorOfWords = remainingWords,
-                                                 debug = debug,
-                                                 prepend = "")
-  }
+topNRemainingWords <- function(sought, guessVector, nGuesses, nToKeep,
+                               remainingWords,
+                               debug = FALSE) {
+  # remainingWords <- str_to_upper(wordle_dict)
+  # 
+  # if (debug) {
+  #   message("topNRemainingWords, nGuesses = ", nGuesses)
+  # }
+  # 
+  # theProbes <- vector()
+  # if (nGuesses > 1) {
+  #   for (i in 1:(nGuesses - 1)) {
+  #     message("guessVector[", i, "] = ", guessVector[i])
+  #     theProbes[i] <- probe_from_guess(sought, guessVector[i])
+  #   }
+  # 
+  #   remainingWords <- possibilities_from_history(theProbes,
+  #                                                vectorOfWords = remainingWords,
+  #                                                debug = debug,
+  #                                                prepend = "")
+  # }
     
   # OUCH sort remaining words by probability of something or other
   if (length(remainingWords) > nToKeep) {
@@ -301,7 +303,7 @@ topNRemainingWords <- function(sought, guessVector, nGuesses, nToKeep, debug = F
                         function(aWord) as.character(tags$p(aWord,
                                                             class = "suggestions")))
   
-  paste(tags$h4("Suggestions will go here", class="suggestions"),
+  paste(tags$h4("Suggestions:", class="suggestions"),
         paste(unlist(listOfPTags), collapse = ""))
 }
 

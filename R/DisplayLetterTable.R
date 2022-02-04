@@ -46,11 +46,10 @@ guessRowToDisplay <- function(sought, guess, row_index, incompleteWordIndex, the
   if (row_index < incompleteWordIndex) {
     lcNewGuess <- str_to_lower(guess)
     if (Done) {
-      response <-  rep("green", 5)
+      response <- rep("green", 5)
     } else {
       response <- theGame$try(lcNewGuess)
     }
-    codes <- evaluate_a_guess(sought, guess)
   }
   scoreIt <- (row_index < incompleteWordIndex)
   tags$tr(guessCellToDisplay(guess, 1, response, scoreIt),

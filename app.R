@@ -105,7 +105,9 @@ server <- function(input, output) {
                                                  # 
                                                  target_word = 
                                                    wordle_solns[today("EST") -
-                                                                as.Date("2021-06-19")]))
+                                                                as.Date("2021-06-19")]),
+                        theHelper = WordleHelper$new(5),
+                        theWords = c())
 
     lapply(unlist(str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "")),
            function(aLetter) observeLetterEvent(aLetter, input, r))
@@ -124,29 +126,38 @@ server <- function(input, output) {
         r$theGame <- WordleGame$new(wordle_dict,
                                     debug = TRUE,
                                     target_word = str_to_lower(input$Sought))
+        r$theHelper <- WordleHelper$new(5)
+        message("observe inputSought wants to update r$words")
+        r$theWords <- r$theHelper$words
+        message("OK, returned from that")
         r$Done <- FALSE
       }
     })
     
     observeEvent(input$typedENTER, {
-      if (r$nKeys < 5) {
-        message("You can't enter an incomplete guess!")
+      if (r$Done || (r$nKeys < 5)) {
+        if (r$nKeys < 5) {
+          message("You can't enter an incomplete guess!")
+        } else {
+          message("Solved or out of guesses")
+        }
       } else {
         # Score that, update keyboard status, and redisplay all letter rows
         if (r$guessNumber < 7 && !r$Done) {
           newGuess <- r$Guesses[r$guessNumber]
           lcNewGuess <- str_to_lower(newGuess)
-          message("calling try(", lcNewGuess, ")")
-          response <- r$theGame$try(lcNewGuess)
-          # OUCH watch out for "all done" state here
-          r$nKeys <- 0
-          r$KeyClasses <- updateKeyClasses(response,
-                                           r$Guesses[r$guessNumber],
-                                           r$KeyClasses)
-          r$guessNumber <- r$guessNumber + 1
+          response <- r$theGame$try(lcNewGuess, quiet = TRUE)
           if (allDoneFromResponse(response)) {
             r$Done <- TRUE
+          } else {
+            r$theHelper$update(lcNewGuess, response)
+            r$theWords <- r$theHelper$words
+            r$nKeys <- 0
+            r$KeyClasses <- updateKeyClasses(response,
+                                             r$Guesses[r$guessNumber],
+                                             r$KeyClasses)
           }
+          r$guessNumber <- r$guessNumber + 1
        } else {
           message("No more guesses! Sorry, you lost.")
           # OUCH Game is over!
@@ -177,7 +188,8 @@ server <- function(input, output) {
     })
     
     output$somePossibleWords <- renderUI({
-      HTML(topNRemainingWords(input$Sought, r$Guesses, r$guessNumber, 25))
+      HTML(topNRemainingWords(input$Sought, r$Guesses, r$guessNumber, 25,
+                              r$theWords))
     })
 }
 
