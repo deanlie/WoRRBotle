@@ -95,6 +95,7 @@ server <- function(input, output) {
                         Guess = "     ",
                         guessNumber = 1,
                         Guesses = rep("     ", 6),
+                        Responses = rep(" ", 6),
                         KeyClasses = tibble(Letter = unlist(
                           str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
                                     boundary("character"))),
@@ -118,6 +119,7 @@ server <- function(input, output) {
         r$nKeys <- 0
         r$guessNumber = 1
         r$Guesses <- rep("     ", 6)
+        r$Responses <- rep("  ", 6)
         r$KeyClasses <- tibble(Letter = unlist(
           str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
                     boundary("character"))),
@@ -147,6 +149,7 @@ server <- function(input, output) {
           newGuess <- r$Guesses[r$guessNumber]
           lcNewGuess <- str_to_lower(newGuess)
           response <- r$theGame$try(lcNewGuess, quiet = TRUE)
+          r$Responses[r$guessNumber] <- paste(response, sep="", collapse=",")
           if (allDoneFromResponse(response)) {
             r$Done <- TRUE
           } else {
@@ -174,8 +177,8 @@ server <- function(input, output) {
     })
 
     output$letterTable <- renderUI({
-      letterTableToDisplay(input$Sought,
-                           r$Guesses,
+      letterTableToDisplay(r$Guesses,
+                           r$Responses,
                            r$guessNumber,
                            r$theGame,
                            r$Done)

@@ -33,51 +33,53 @@ allDoneFromResponse <- function(responses) {
   return(TRUE)
 }
 
-guessCellToDisplay <- function(guessed, position, responses, scoreIt) {
+guessCellToDisplay <- function(guessed, position, response, scoreIt) {
   if (scoreIt) {
-    theClasses <- paste(classFromResponse(responses, position), "guesses")
+    theClasses <- paste(classFromResponse(response), "guesses")
   } else {
     theClasses <- "not_entered guesses"
   }
   tags$td(substr(guessed, position, position), class = theClasses)   
 }
 
-guessRowToDisplay <- function(sought, guess, row_index, incompleteWordIndex, theGame, Done) {
-  if (row_index < incompleteWordIndex) {
-    lcNewGuess <- str_to_lower(guess)
-    if (Done) {
-      response <- rep("green", 5)
-    } else {
-      response <- theGame$try(lcNewGuess)
-    }
-  }
+guessRowToDisplay <- function(guess, response, row_index, incompleteWordIndex, theGame, Done) {
+  # if (row_index < incompleteWordIndex) {
+  #   lcNewGuess <- str_to_lower(guess)
+  #   if (Done) {
+  #     response <- rep("green", 5)
+  #   } else {
+  #     response <- theGame$try(lcNewGuess)
+  #   }
+  # }
   scoreIt <- (row_index < incompleteWordIndex)
-  tags$tr(guessCellToDisplay(guess, 1, response, scoreIt),
-          guessCellToDisplay(guess, 2, response, scoreIt),
-          guessCellToDisplay(guess, 3, response, scoreIt),
-          guessCellToDisplay(guess, 4, response, scoreIt),
-          guessCellToDisplay(guess, 5, response, scoreIt))
+  
+  splitResp <- unlist(str_split(response, ","))
+
+  tags$tr(guessCellToDisplay(guess, 1, splitResp[1], scoreIt),
+          guessCellToDisplay(guess, 2, splitResp[2], scoreIt),
+          guessCellToDisplay(guess, 3, splitResp[3], scoreIt),
+          guessCellToDisplay(guess, 4, splitResp[4], scoreIt),
+          guessCellToDisplay(guess, 5, splitResp[5], scoreIt))
 }
 
-guessTableToDisplay <- function(sought, guessArray, incompleteWordIndex, theGame, Done) {
-  tags$table(guessRowToDisplay(sought, guessArray[1], 1, incompleteWordIndex, theGame, Done),
-             guessRowToDisplay(sought, guessArray[2], 2, incompleteWordIndex, theGame, Done),
-             guessRowToDisplay(sought, guessArray[3], 3, incompleteWordIndex, theGame, Done),
-             guessRowToDisplay(sought, guessArray[4], 4, incompleteWordIndex, theGame, Done),
-             guessRowToDisplay(sought, guessArray[5], 5, incompleteWordIndex, theGame, Done),
-             guessRowToDisplay(sought, guessArray[6], 6, incompleteWordIndex, theGame, Done),
+guessTableToDisplay <- function(guessArray, responseArray, incompleteWordIndex, theGame, Done) {
+  tags$table(guessRowToDisplay(guessArray[1], responseArray[1], 1, incompleteWordIndex, theGame, Done),
+             guessRowToDisplay(guessArray[2], responseArray[2], 2, incompleteWordIndex, theGame, Done),
+             guessRowToDisplay(guessArray[3], responseArray[3], 3, incompleteWordIndex, theGame, Done),
+             guessRowToDisplay(guessArray[4], responseArray[4], 4, incompleteWordIndex, theGame, Done),
+             guessRowToDisplay(guessArray[5], responseArray[5], 5, incompleteWordIndex, theGame, Done),
+             guessRowToDisplay(guessArray[6], responseArray[6], 6, incompleteWordIndex, theGame, Done),
              class = "guesses")
 }
 
-letterTableToDisplay <- function(sought, guessArray, incompleteWordIndex, theGame, Done) {
+letterTableToDisplay <- function(guessArray, responseArray, incompleteWordIndex, theGame, Done) {
   HTML(paste(tags$h4("Guesses"),
-             tags$div(guessTableToDisplay(sought, guessArray, incompleteWordIndex, theGame, Done)),
+             tags$div(guessTableToDisplay(guessArray, responseArray, incompleteWordIndex, theGame, Done)),
              sep=""))
 }
 
 kbdRowToDisplay <- function(letterSequence, keyClasses) {
   letters <- unlist(str_split(letterSequence, ""))
-  message("in kbdRowToDisplay")
   trArg <- ""
   for (letter in letters) {
     trArg <- paste(trArg, styledButtonForKeyboardLetter(letter, keyClasses), sep = "\n")
