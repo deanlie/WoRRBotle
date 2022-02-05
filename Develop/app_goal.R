@@ -23,12 +23,23 @@ ui <- fluidPage(
 
     # Sidebar with the controls 
     sidebarLayout(
-        sidebarPanel(
-          tabsetPanel(header = "What to do",
-                      type = "hidden",
-                      tabPanelBody("Your word/Hints", value = "YoursH",
-                                   textInput("Sought", "Target Word", "", '100px', ""),
-                                   htmlOutput("somePossibleWords")))),
+      sidebarPanel(
+        tabsetPanel(header = "What to do",
+                    type = "hidden",
+                    tabPanelBody("Yesterday's Game", value = "Yesterday"),
+                    tabPanelBody("Yesterday/Hints", value = "YesterdayH",
+                             htmlOutput("somePossibleWords")),
+                    tabPanelBody("Your word/Hints", value = "YoursH",
+                             textInput("Sought", "Target Word", "", '100px', ""),
+                             htmlOutput("somePossibleWords")),
+                    tabPanelBody("Random Game", value = "Random"),
+                    tabPanelBody("Random/Hints", value = "RandomH",
+                             htmlOutput("somePossibleWords")),
+                    id = "Controls",
+                    selected = "Yesterday"
+                    )
+        ),
+
         # Show the feedback for the guesses so far
         mainPanel(
           htmlOutput("letterTable"),
