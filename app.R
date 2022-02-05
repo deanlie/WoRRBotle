@@ -25,6 +25,7 @@ ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
           textInput("Sought", "Answer!", "", '100px', ""),
+          # htmlOutput("errorsHere"),
           htmlOutput("somePossibleWords")
         ),
 
@@ -91,8 +92,10 @@ observeLetterEvent <- function(aLetter, inputList, valuesList) {
 server <- function(input, output) {
   
     r <- reactiveValues(nKeys = 0, # Which column does a new keypress go in
-                        Done = FALSE, # When TRUE we won't ask the game agai
+                        Done = FALSE,
+                        Won = FALSE,
                         Guess = "     ",
+                        Error = NULL,
                         guessNumber = 1,
                         Guesses = rep("     ", 6),
                         Responses = rep(" ", 6),
@@ -117,6 +120,10 @@ server <- function(input, output) {
       if(str_length(input$Sought) == 5) {
         message("Observed change in input$Sought, new value is '", input$Sought, "'")
         r$nKeys <- 0
+        r$Done <- FALSE
+        r$Won <- FALSE
+        r$Guess <- "     "
+        r$Error <- NULL
         r$guessNumber = 1
         r$Guesses <- rep("     ", 6)
         r$Responses <- rep("  ", 6)
@@ -139,7 +146,7 @@ server <- function(input, output) {
     observeEvent(input$typedENTER, {
       if (r$Done || (r$nKeys < 5)) {
         if (r$nKeys < 5) {
-          message("You can't enter an incomplete guess!")
+          r$Error <- "You can't enter an incomplete guess!"
         } else {
           message("Solved or out of guesses")
         }
@@ -147,31 +154,39 @@ server <- function(input, output) {
         # Score that, update keyboard status, and redisplay all letter rows
         if (r$guessNumber < 7 && !r$Done) {
           newGuess <- r$Guesses[r$guessNumber]
+          message("ENTER guess: ", newGuess)
           lcNewGuess <- str_to_lower(newGuess)
-          response <- r$theGame$try(lcNewGuess, quiet = TRUE)
-          r$Responses[r$guessNumber] <- paste(response, sep="", collapse=",")
-          if (allDoneFromResponse(response)) {
-            r$Done <- TRUE
+          if (lcNewGuess %in% r$theGame$words) {
+            response <- r$theGame$try(lcNewGuess, quiet = TRUE)
+            r$Responses[r$guessNumber] <- paste(response, sep="", collapse=",")
+            if (allDoneFromResponse(response)) {
+              r$Done <- TRUE
+              r$Won <- TRUE
+            } else {
+              r$theHelper$update(lcNewGuess, response)
+              r$theWords <- r$theHelper$words
+              r$nKeys <- 0
+              r$KeyClasses <- updateKeyClasses(response,
+                                               r$Guesses[r$guessNumber],
+                                               r$KeyClasses)
+            }
+            r$guessNumber <- r$guessNumber + 1
+            if (r$guessNumber > 6) {
+              r$Error <- "No more guesses! Sorry, game over."
+              r$Done <- TRUE
+            }
           } else {
-            r$theHelper$update(lcNewGuess, response)
-            r$theWords <- r$theHelper$words
-            r$nKeys <- 0
-            r$KeyClasses <- updateKeyClasses(response,
-                                             r$Guesses[r$guessNumber],
-                                             r$KeyClasses)
+            r$Error <- "Not a valid word in the word list"
           }
-          r$guessNumber <- r$guessNumber + 1
        } else {
-          message("No more guesses! Sorry, you lost.")
-          # OUCH Game is over!
-        }
+          r$Error <- "No more guesses! Sorry, game over."
+         }
       }
     })
     
     observeEvent(input$typedDELETE, {
       if (r$nKeys > 0) {
         substr(r$Guesses[r$guessNumber], r$nKeys, r$nKeys) <- " "
-        message("Active word is now ", r$Guesses[r$guessNumber])
         r$nKeys <- r$nKeys - 1
       }
     })
@@ -190,8 +205,24 @@ server <- function(input, output) {
                  makeStyledKeyboardTableRow(keyboardRow3Vector(), r$KeyClasses)))
     })
     
+    # output$errorsHere <- renderUI({
+    #   if(!is.null(r$Error)) {
+    #     HTML(paste(tags$h4(r$Error, style = "color: red")))
+    #   } else {
+    #     NULL
+    #   }
+    # })
+    
     output$somePossibleWords <- renderUI({
-      HTML(topNRemainingWords(r$theWords, 25))
+      if(!is.null(r$Error)) {
+        HTML(paste(tags$h4(r$Error, style = "color: red")))
+      } else {
+        if (r$Won) {
+          HTML(paste(tags$h4("You won!", style = "color: #44FF44")))
+        } else {
+          HTML(topNRemainingWords(r$theWords, 25))
+        }
+      }
     })
 }
 

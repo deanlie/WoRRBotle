@@ -42,15 +42,7 @@ guessCellToDisplay <- function(guessed, position, response, scoreIt) {
   tags$td(substr(guessed, position, position), class = theClasses)   
 }
 
-guessRowToDisplay <- function(guess, response, row_index, incompleteWordIndex, theGame, Done) {
-  # if (row_index < incompleteWordIndex) {
-  #   lcNewGuess <- str_to_lower(guess)
-  #   if (Done) {
-  #     response <- rep("green", 5)
-  #   } else {
-  #     response <- theGame$try(lcNewGuess)
-  #   }
-  # }
+guessRowToDisplay <- function(guess, response, row_index, incompleteWordIndex) {
   scoreIt <- (row_index < incompleteWordIndex)
   
   splitResp <- unlist(str_split(response, ","))
@@ -63,12 +55,12 @@ guessRowToDisplay <- function(guess, response, row_index, incompleteWordIndex, t
 }
 
 guessTableToDisplay <- function(guessArray, responseArray, incompleteWordIndex, theGame, Done) {
-  tags$table(guessRowToDisplay(guessArray[1], responseArray[1], 1, incompleteWordIndex, theGame, Done),
-             guessRowToDisplay(guessArray[2], responseArray[2], 2, incompleteWordIndex, theGame, Done),
-             guessRowToDisplay(guessArray[3], responseArray[3], 3, incompleteWordIndex, theGame, Done),
-             guessRowToDisplay(guessArray[4], responseArray[4], 4, incompleteWordIndex, theGame, Done),
-             guessRowToDisplay(guessArray[5], responseArray[5], 5, incompleteWordIndex, theGame, Done),
-             guessRowToDisplay(guessArray[6], responseArray[6], 6, incompleteWordIndex, theGame, Done),
+  tags$table(guessRowToDisplay(guessArray[1], responseArray[1], 1, incompleteWordIndex),
+             guessRowToDisplay(guessArray[2], responseArray[2], 2, incompleteWordIndex),
+             guessRowToDisplay(guessArray[3], responseArray[3], 3, incompleteWordIndex),
+             guessRowToDisplay(guessArray[4], responseArray[4], 4, incompleteWordIndex),
+             guessRowToDisplay(guessArray[5], responseArray[5], 5, incompleteWordIndex),
+             guessRowToDisplay(guessArray[6], responseArray[6], 6, incompleteWordIndex),
              class = "guesses")
 }
 
