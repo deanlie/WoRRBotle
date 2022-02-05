@@ -25,7 +25,6 @@ ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
           textInput("Sought", "Answer!", "", '100px', ""),
-          # htmlOutput("errorsHere"),
           htmlOutput("somePossibleWords")
         ),
 
@@ -204,15 +203,7 @@ server <- function(input, output) {
                  makeStyledKeyboardTableRow(keyboardRow2Vector(), r$KeyClasses),
                  makeStyledKeyboardTableRow(keyboardRow3Vector(), r$KeyClasses)))
     })
-    
-    # output$errorsHere <- renderUI({
-    #   if(!is.null(r$Error)) {
-    #     HTML(paste(tags$h4(r$Error, style = "color: red")))
-    #   } else {
-    #     NULL
-    #   }
-    # })
-    
+
     output$somePossibleWords <- renderUI({
       if(!is.null(r$Error)) {
         HTML(paste(tags$h4(r$Error, style = "color: red")))
