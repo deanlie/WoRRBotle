@@ -6,12 +6,13 @@ buttonForKeyboardLetter <- function(theText, extraClass = NULL) {
     theClass <- paste("kbd", extraClass)
   }
 
-  classyButton <- actionButton(paste0("typed", theText), theText)
-  # That will have its $attribs$class = "btn btn-default action-button".
+  classyButton <- actionButton(paste0("typed", theText), theText, class = theClass)
+  # That will have its $attribs$class = "btn btn-default action-button <theClass>".
   # "btn-default" interferes with our ability to style its background color.
   # We need to edit out the "btn-default" from that attribute.
-  desiredClass <- paste("btn action-button", theClass)
-  classyButton$attribs$class <- desiredClass
+  classyButton$attribs$class <- str_replace(classyButton$attribs$class,
+                                            " btn-default ",
+                                            " ")
 
   tags$td(classyButton, class=theClass)
 }
