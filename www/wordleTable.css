@@ -89,7 +89,7 @@ p.suggestions {
 
 .absent {
   text-align: center;
-  background-color: #86888a;
+  background-color: #66686a;
 }
 
 .not_entered {
@@ -102,10 +102,24 @@ button.action-button {
   padding-bottom: 20px;
   padding-left: 10px;
   padding-right: 10px;
-  background-color: #ff000080;
+  background-color: #a0a0a0;
   text-align: center;
   text-transform: uppercase;
   font-size: .75rem;
   font-family: Sans-Serif;
   box-sizing: content-box;
 }
+
+button.action-button.correct {
+  background-color: #6aaa64;
+}
+
+button.action-button.wrong_place {
+  background-color: #c9b458;
+}
+
+button.action-button.absent {
+  background-color: #66686a;
+}
+
+

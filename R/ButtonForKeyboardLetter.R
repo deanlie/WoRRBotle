@@ -1,20 +1,25 @@
+
 buttonForKeyboardLetter <- function(theText, extraClass = NULL) {
   if (is.null(extraClass)) {
     theClass <- "kbd"
   } else {
     theClass <- paste("kbd", extraClass)
   }
-  if (is.null(extraClass)) {
-    tags$td(actionButton(paste0("typed", theText), theText), class="kbd")
-  } else {
-    tags$td(actionButton(paste0("typed", theText), theText, class=extraClass), class=theClass)
-  }
+
+  classyButton <- actionButton(paste0("typed", theText), theText)
+  # That will have its $attribs$class = "btn btn-default action-button".
+  # "btn-default" interferes with our ability to style its background color.
+  # We need to edit out the "btn-default" from that attribute.
+  desiredClass <- paste("btn action-button", theClass)
+  classyButton$attribs$class <- desiredClass
+
+  tags$td(classyButton, class=theClass)
 }
 
 styledButtonForKeyboardLetter <- function(theText, keyClasses) {
   if (str_length(theText) == 1) {
     indexVector <- (keyClasses[["Letter"]] == theText)
-    extraClass <- keyClasses$BestClass[indexVector]
+    extraClass <- paste(keyClasses$BestClass[indexVector])
   } else {
     extraClass = NULL
   }
