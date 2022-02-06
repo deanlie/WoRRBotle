@@ -44,6 +44,54 @@ p_word_no_hits <- function(aWord, miss_probs, known_letters = c()) {
   # word
 }
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Sort the list of candidate words (suggested next guess) by probability of
+#' hitting at least one UNMATCHED letter in a random word chosen from that
+#' list, that is, a letter in a position where no guess has returned green.
+#' Every candidate has all the matched letters in common with every other one,
+#' so we split all the words, count how many distinct letters there are in
+#' each position, throw away those positions, count how many times each letter
+#' occurs in what's left; use those counts to compute probability of a word
+#' not hitting anything useful.
+#' 
+#' @param candidateList A vector of words which are possible solutions given what we
+#' know so far
+#' @return That list sorted by the word which hits the most others in unmatched places
+#' (and therefore eliminates the most if it returns empty)
+sortCandidatesByChanceOfHittingLetters <- function(candidateList) {
+  # Count letter occurrence among words in target list
+  candidateTibble <- tibble(Candidates = candidateList) %>%
+    mutate(L1 = substr(Candidates, 1,1),
+           L2 = substr(Candidates, 2,2),
+           L3 = substr(Candidates, 3,3),
+           L4 = substr(Candidates, 4,4),
+           L5 = substr(Candidates, 5,5))
+  
+  summary <- candidateTibble %>%
+    summarize(L1 = n_distinct(L1),
+              L2 = n_distinct(L2),
+              L3 = n_distinct(L3),
+              L4 = n_distinct(L4),
+              L5 = n_distinct(L5))
+  
+  # unmatchedLetters <- candidateTibble %>%
+  #   select("Candidates", all_of([[summary]]))
+
+  for (i in 2:6) {
+    if (summary[i - 1] == 1)
+      candidateTibble[,i] <- ""
+  }
+  
+  reassemble <- candidateTibble %>%
+    mutate(NoMatch = paste0(L1, L2, L3, L4, L5), .keep = "unused")
+  
+  # I now have a tibble with columns "Candidates" and "NoMatch". Count the number
+  # of words each letter occurs in (see or modify make_letter_counts). It's going
+  # to become clearer in the morning.
+  
+  return(reassemble)
+}
+
 # Moved function pattern_for_match to TopNRemainingWords.R
 # Moved function pattern_for_not_here to TopNRemainingWords.R
 # Moved function negative_pattern_for_not_here to TopNRemainingWords.R
@@ -81,4 +129,9 @@ testFilter <- function(switchArg) {
                                     "clump", "chirp", "brick", "corgi", "crick",
                                     "crier", "crimp"))
   possibilities_from_history(theProbes, theWordVector, traceThisRoutine = TRUE)
+}
+
+testSort <- function(aVectorOfWords = c("stamp", "tramp", "cramp", "clamp",
+                                        "clump", "crimp")) {
+  result <- sortCandidatesByChanceOfHittingLetters(aVectorOfWords)
 }
