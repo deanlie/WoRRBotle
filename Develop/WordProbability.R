@@ -20,13 +20,26 @@ number_of_matches <- function(vectorOfWords, aPattern) {
   length(vectorOfWords[str_detect(vectorOfWords, aPattern)])
 }
 
-make_letter_counts <- function(vectorOfWords) {
-  # Make table like letter_counts.csv from list of words of given length
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Count how many words in input tibble contain each letter A-Z, case
+#' insensitive
+#' 
+#' @param candidateTibble A vector of words, count letter presence in it
+#' 
+#' @return A a 2-column tibble, Letter = c("a":"z"), Words = number of words
+#' in a vector of words input to the function which contain the Letter
+countWordsByLetter <- function(candidateTibble) {
   theAlphabet <-  "abcdefghijklmnopqrstuvwxyz"
   letterVector <- unlist(strsplit(theAlphabet, ""))
   countVector <- rep(0, times = length(letterVector))
+  vectorOfWords <- candidateTibble$NoMatch
   for (i in 1:length(letterVector)) {
-    countVector[i] <- number_of_matches(vectorOfWords, letterVector[i])
+    # Make pattern '[aA]' from input 'a' or 'A'
+    aPattern <- paste0("[",
+                       str_to_upper(letterVector[i]),
+                       str_to_lower(letterVector[i]),
+                       "]")
+    countVector[i] <- number_of_matches(vectorOfWords, aPattern)
   }
   letter_counts <- tibble(Letter = letterVector, Words = countVector)
 }
@@ -42,6 +55,45 @@ make_p_miss <- function(letter_counts) {
 p_word_no_hits <- function(aWord, miss_probs, known_letters = c()) {
   # Estimate the probability that aWord has no letters in common with a random possible
   # word
+}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Return a the total of letter_counts[<all letters in a word>]
+#' 
+#' @param aWord A word
+#' @param theCounts A tibble with Letter = c('a':'z') as it were,
+#' Words = an integer
+#' 
+#' @return an integer
+LCTotal <- function(aWord, countTable = countTable) {
+  # sum(filter(letterCounts, Letter %in% unlist(str_split({aWord}, "")))$Words)
+  message("letterCountTotal ", aWord)
+  message("countTable", countTable[1,])
+  sum(filter(countTable, Letter %in% unlist(str_split({aWord}, "")))$Words)
+}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Return a vector of letterCountTotal for each word in a vector of words 
+#' 
+#' @param vectorOfWords A vector of words
+#' @param letterCounts A tibble with Letter = c('a':'z') as it were,
+#' Words = an integer
+#' 
+#' @return a tibble with vectorOfWords as first column, letterCountTotal of
+#' each word as second column
+letterCountTotalVector <- function(vectorOfWords, letterCounts) {
+  FUN <- function(aWord) {
+    theFilter <- letterCounts %>% 
+      filter(Letter %in% unlist(str_split(aWord, "")))
+    as.integer(sum(theFilter$Words))
+  }
+  
+  # theCountVector <- unlist(lapply(vectorOfWords, FUN))
+  # hgn <- tibble(Words = vectorOfWords, TotalCounts = theCountVector)
+
+  # theCountVector <- unlist(lapply(vectorOfWords, FUN))
+  hgn <- tibble(Words = vectorOfWords, TotalCounts = unlist(lapply(vectorOfWords,
+                                                                   FUN)))
 }
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -86,13 +138,17 @@ sortCandidatesByChanceOfHittingLetters <- function(candidateList) {
     mutate(NoMatch = paste0(L1, L2, L3, L4, L5), .keep = "unused")
   
   # I now have a tibble with columns "Candidates" and "NoMatch". Count the number
-  # of words each letter occurs in (see or modify make_letter_counts). It's going
-  # to become clearer in the morning.
-  
-  return(reassemble)
+  # of words each letter occurs in.
+  letterCounts <<- countWordsByLetter(reassemble)
+
+  # I want a vector of count of letter_counts[A] in a vector of words
+  HGN <- reassemble %>%
+    mutate(TotalCounts = letterCountTotal(NoMatch, {letterCounts}))
+  return(HGN)
 }
 
-testSort <- function(aVectorOfWords = c("stamp", "tramp", "cramp", "clamp",
+
+testSort <- function(aVectorOfWords = c("stamp", "trAmp", "cramp", "clAmp",
                                         "clump", "crimp")) {
   result <- sortCandidatesByChanceOfHittingLetters(aVectorOfWords)
 }
