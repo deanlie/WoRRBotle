@@ -92,45 +92,6 @@ sortCandidatesByChanceOfHittingLetters <- function(candidateList) {
   return(reassemble)
 }
 
-# Moved function pattern_for_match to TopNRemainingWords.R
-# Moved function pattern_for_not_here to TopNRemainingWords.R
-# Moved function negative_pattern_for_not_here to TopNRemainingWords.R
-# Moved function negative_pattern_for_nowhere to TopNRemainingWords.R
-# Moved function possibilities_from_one_probe_letter to TopNRemainingWords.R
-# Moved function possibilities_from_one_probe to TopNRemainingWords.R
-# Moved function possibilities_from_history to TopNRemainingWords.R
-# Moved function evaluate_a_guess to its own module EvaluateAGuess.R
-# Moved function probe_from_guess to TopNRemainingWords.R
-
-possibilities_from_guesses <- function(theTarget, theGuesses, vectorOfWords = NULL,
-                                       traceThisRoutine = FALSE, prepend = "") {
-  theProbes <- vector()
-  for (i in length(theGuesses)) {
-    theProbes[i] <- probe_from_guess(theTarget, theGuesses[i])
-  }
-  possibilities_from_history(theProbes, vectorOfWords = vectorOfWords,
-                             debug = FALSE, prepend = myPrepend)
-}
-
-testFilter <- function(switchArg) {
-  cat(file = stderr(), "\n\nTesting filter in mode", switchArg, "\n")
-  theProbes <- switch(switchArg,
-                      one = c("starexxxYx", "untilxxxYx", "comfyGxYxx", "crimpGGGGG"),
-                      two = c("starexxxYx", "untilxxxYx", "comfyGxYxx", "crimpGGGGG"),
-                      three = c("starexxxYx", "untilxxxYx", "comfyGxYxx", "crimpGGGGG"),
-                      four = c("starexxxYx", "untilxxxYx", "comfyGxYxx", "crimpGGGGG"))
-  theWordVector <- switch(switchArg,
-                          one = NULL,
-                          two = NULL,
-                          three = c("stamp", "tramp", "cramp", "clamp", "axiom",
-                                    "clump", "chirp", "brick", "corgi", "crick",
-                                    "crier", "crimp"),
-                          four = c("stamp", "tramp", "cramp",
-                                    "clump", "chirp", "brick", "corgi", "crick",
-                                    "crier", "crimp"))
-  possibilities_from_history(theProbes, theWordVector, traceThisRoutine = TRUE)
-}
-
 testSort <- function(aVectorOfWords = c("stamp", "tramp", "cramp", "clamp",
                                         "clump", "crimp")) {
   result <- sortCandidatesByChanceOfHittingLetters(aVectorOfWords)

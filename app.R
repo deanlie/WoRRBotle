@@ -51,21 +51,6 @@ handleLetterKey <- function(rVals, aLetter) {
   return(rVals)
 }
 
-updateKeyClasses0 <- function(sought, lastGuess, keyClasses) {
-  code = evaluate_a_guess(sought, lastGuess)
-  for (i in 1:5) {
-    class <- classFromCode(code, i)
-    letter <- substr(lastGuess, i, i)
-    indexVector <- (keyClasses[["Letter"]] == letter)
-    currentCode <- keyClasses$BestClass[indexVector]
-    if ((currentCode == "unknown") ||
-        ((currentCode == "wrong_place") && (class == "correct"))) {
-      keyClasses$BestClass[indexVector] <- class
-    }
-  }
-  return(keyClasses)
-}
-
 updateKeyClasses <- function(code,
                              lastGuess,
                              keyClasses) {

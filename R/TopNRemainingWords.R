@@ -1,5 +1,3 @@
-source("R/words.R")
-source("R/EvaluateAGuess.R")
 
 topNRemainingWords <- function(remainingWords, nToKeep) {
   # OUCH sort remaining words by which remove the most candidates
