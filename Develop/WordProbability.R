@@ -7,41 +7,10 @@ library(tidyverse)
 #  "until", misses 2050
 #  "adieu" followed by "story" is guaranteed to have at least one hit
 
-
 get_words_of_given_length <- function(wordLength = 5) {
   # Make letter_counts table like letter_counts.csv from /usr/share/dict/words
   allWords <- read_lines("/usr/share/dict/words")
   wordsWithGivenLength <- allWords[wordLength == str_length(allWords)]
-}
-
-# Moved routine filter_words_by_pattern to TopNRemainingWords.R
-
-number_of_matches <- function(vectorOfWords, aPattern) {
-  length(vectorOfWords[str_detect(vectorOfWords, aPattern)])
-}
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Count how many words in input tibble contain each letter A-Z, case
-#' insensitive
-#' 
-#' @param candidateTibble A vector of words, count letter presence in it
-#' 
-#' @return A a 2-column tibble, Letter = c("a":"z"), Words = number of words
-#' in a vector of words input to the function which contain the Letter
-countWordsByLetter <- function(candidateTibble) {
-  theAlphabet <-  "abcdefghijklmnopqrstuvwxyz"
-  letterVector <- unlist(strsplit(theAlphabet, ""))
-  countVector <- rep(0, times = length(letterVector))
-  vectorOfWords <- candidateTibble$NoMatch
-  for (i in 1:length(letterVector)) {
-    # Make pattern '[aA]' from input 'a' or 'A'
-    aPattern <- paste0("[",
-                       str_to_upper(letterVector[i]),
-                       str_to_lower(letterVector[i]),
-                       "]")
-    countVector[i] <- number_of_matches(vectorOfWords, aPattern)
-  }
-  letter_counts <- tibble(Letter = letterVector, Words = countVector)
 }
 
 make_p_miss <- function(letter_counts) {
@@ -73,6 +42,47 @@ LCTotal <- function(aWord, countTable = countTable) {
 }
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Stuff below here is needed for the real project, above is development only
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Count how many words in a vector of words match a given pattern
+#' 
+#' @param vectorOfWords A vector of words to examine for a pattern
+#' @param aPattern A pattern to look for
+#'
+#' @returns the number of words which match the pattern
+number_of_matches <- function(vectorOfWords, aPattern) {
+  length(vectorOfWords[str_detect(vectorOfWords, aPattern)])
+}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Count how many words in input tibble contain each letter A-Z, case
+#' insensitive
+#' 
+#' @param candidateTibble A vector of words, count letter presence in it
+#' 
+#' @return A a 2-column tibble, Letter = c("a":"z"), Words = number of words
+#' in a vector of words input to the function which contain the Letter
+countWordsByLetter <- function(candidateTibble) {
+  theAlphabet <-  "abcdefghijklmnopqrstuvwxyz"
+  letterVector <- unlist(strsplit(theAlphabet, ""))
+  countVector <- rep(0, times = length(letterVector))
+  vectorOfWords <- candidateTibble$NoMatch
+  for (i in 1:length(letterVector)) {
+    # Make pattern '[aA]' from input 'a' or 'A'
+    aPattern <- paste0("[",
+                       str_to_upper(letterVector[i]),
+                       str_to_lower(letterVector[i]),
+                       "]")
+    countVector[i] <- number_of_matches(vectorOfWords, aPattern)
+  }
+  letter_counts <- tibble(Letter = letterVector, Words = countVector)
+}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Return a vector of letterCountTotal for each word in a vector of words 
 #' 
 #' @param vectorOfWords A vector of words
@@ -81,13 +91,20 @@ LCTotal <- function(aWord, countTable = countTable) {
 #' 
 #' @return a vector of the sum of letterCounts for all letters of each word
 letterCountTotalVector <- function(vectorOfWords, letterCounts) {
-  FUN <- function(aWord) {
-    theFilter <- letterCounts %>% 
-      filter(Letter %in% unlist(str_split(aWord, "")))
-    as.integer(sum(theFilter$Words))
-  }
-
-  theCountVector <- unlist(lapply(vectorOfWords, FUN))
+  # FUN <- function(aWord) {
+  #   theFilter <- letterCounts %>% 
+  #     filter(Letter %in% unlist(str_split(aWord, "")))
+  #   as.integer(sum(theFilter$Words))
+  # }
+  # 
+  # theCountVector0 <- unlist(lapply(vectorOfWords, FUN))
+  # 
+  theCountVector <- unlist(lapply(vectorOfWords,
+                                  function(aWord) {
+                                    theFilter <- letterCounts %>% 
+                                      filter(Letter %in% unlist(str_split(aWord, "")))
+                                    as.integer(sum(theFilter$Words))
+                                  }))
 }
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
