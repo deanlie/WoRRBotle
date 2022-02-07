@@ -79,21 +79,15 @@ LCTotal <- function(aWord, countTable = countTable) {
 #' @param letterCounts A tibble with Letter = c('a':'z') as it were,
 #' Words = an integer
 #' 
-#' @return a tibble with vectorOfWords as first column, letterCountTotal of
-#' each word as second column
+#' @return a vector of the sum of letterCounts for all letters of each word
 letterCountTotalVector <- function(vectorOfWords, letterCounts) {
   FUN <- function(aWord) {
     theFilter <- letterCounts %>% 
       filter(Letter %in% unlist(str_split(aWord, "")))
     as.integer(sum(theFilter$Words))
   }
-  
-  # theCountVector <- unlist(lapply(vectorOfWords, FUN))
-  # hgn <- tibble(Words = vectorOfWords, TotalCounts = theCountVector)
 
-  # theCountVector <- unlist(lapply(vectorOfWords, FUN))
-  hgn <- tibble(Words = vectorOfWords, TotalCounts = unlist(lapply(vectorOfWords,
-                                                                   FUN)))
+  theCountVector <- unlist(lapply(vectorOfWords, FUN))
 }
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -110,7 +104,7 @@ letterCountTotalVector <- function(vectorOfWords, letterCounts) {
 #' know so far
 #' @return That list sorted by the word which hits the most others in unmatched places
 #' (and therefore eliminates the most if it returns empty)
-sortCandidatesByChanceOfHittingLetters <- function(candidateList) {
+sortCandidatesByUnmatchedLettersHit <- function(candidateList) {
   # Count letter occurrence among words in target list
   candidateTibble <- tibble(Candidates = candidateList) %>%
     mutate(L1 = substr(Candidates, 1,1),
@@ -129,26 +123,33 @@ sortCandidatesByChanceOfHittingLetters <- function(candidateList) {
   # unmatchedLetters <- candidateTibble %>%
   #   select("Candidates", all_of([[summary]]))
 
+  # Replace the letters all candidates have in common with blank
   for (i in 2:6) {
     if (summary[i - 1] == 1)
       candidateTibble[,i] <- ""
   }
-  
+
+  # Paste back all the letters that are not in common. These are the ones
+  # that we need more information on.
   reassemble <- candidateTibble %>%
     mutate(NoMatch = paste0(L1, L2, L3, L4, L5), .keep = "unused")
   
   # I now have a tibble with columns "Candidates" and "NoMatch". Count the number
   # of words each letter occurs in.
-  letterCounts <<- countWordsByLetter(reassemble)
+  letterCounts <- countWordsByLetter(reassemble)
 
-  # I want a vector of count of letter_counts[A] in a vector of words
-  HGN <- reassemble %>%
-    mutate(TotalCounts = letterCountTotal(NoMatch, {letterCounts}))
-  return(HGN)
+  # I want a vector of sum(letter_counts[foreach(letter in the word)]
+  # corresponding to a vector of words
+  theLetterCountVector <- letterCountTotalVector(unlist(reassemble$NoMatch), letterCounts)
+  
+  wordsAndCounts <- tibble(Words = candidateList, TotalCounts = unlist(theLetterCountVector))
+  
+  topCountsFirst <- arrange(wordsAndCounts, desc(TotalCounts))
+
+  return(unlist(topCountsFirst$Words))
 }
-
 
 testSort <- function(aVectorOfWords = c("stamp", "trAmp", "cramp", "clAmp",
                                         "clump", "crimp")) {
-  result <- sortCandidatesByChanceOfHittingLetters(aVectorOfWords)
+  result <- sortCandidatesByUnmatchedLettersHit(aVectorOfWords)
 }
