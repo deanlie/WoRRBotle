@@ -24,12 +24,12 @@ ui <- fluidPage(
     # Sidebar with the controls 
     sidebarLayout(
         sidebarPanel(
-          # checkboxInput(inputId, label, value = FALSE, width = NULL)
-          textInput("Sought", "Answer!", "", '100px', ""),
+          checkboxInput("userTarget", "User inputs answer?", value = TRUE, width = NULL),
           tabsetPanel(
             id = "switcher",
             type = "hidden",
-            tabPanelBody("panel1", "User answer input here"),
+            tabPanelBody("panel1", 
+                         textInput("Sought", "Answer!", "", '100px', "")),
             tabPanelBody("panel2", "")),
           checkboxInput("showHints", "Show suggestions?"),
           htmlOutput("somePossibleWords")
