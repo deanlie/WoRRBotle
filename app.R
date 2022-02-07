@@ -24,11 +24,17 @@ ui <- fluidPage(
     # Sidebar with the controls 
     sidebarLayout(
         sidebarPanel(
-          tabsetPanel(header = "What to do",
-                      type = "hidden",
-                      tabPanelBody("Your word/Hints", value = "YoursH",
-                                   textInput("Sought", "Target Word", "", '100px', ""),
-                                   htmlOutput("somePossibleWords")))),
+          # checkboxInput(inputId, label, value = FALSE, width = NULL)
+          textInput("Sought", "Answer!", "", '100px', ""),
+          tabsetPanel(
+            id = "switcher",
+            type = "hidden",
+            tabPanelBody("panel1", "User answer input here"),
+            tabPanelBody("panel2", "")),
+          checkboxInput("showHints", "Show suggestions?"),
+          htmlOutput("somePossibleWords")
+        ),
+
         # Show the feedback for the guesses so far
         mainPanel(
           htmlOutput("letterTable"),
@@ -165,6 +171,9 @@ server <- function(input, output) {
             } else {
               r$theHelper$update(lcNewGuess, response)
               r$theWords <- r$theHelper$words
+              if (input$showHints) {
+                r$theSortedSuggestions <- sortCandidatesByUnmatchedLettersHit(r$theHelper$words)
+              }
               r$nKeys <- 0
               r$KeyClasses <- updateKeyClasses(response,
                                                r$Guesses[r$guessNumber],
@@ -212,7 +221,9 @@ server <- function(input, output) {
         if (r$Won) {
           HTML(paste(tags$h4("You won!", style = "color: #44FF44")))
         } else {
-          HTML(topNRemainingWords(r$theWords, 25))
+          if (input$showHints) {
+            HTML(topNRemainingWords(r$theSortedSuggestions, 25))
+          }
         }
       }
     })
