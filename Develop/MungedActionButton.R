@@ -14,8 +14,19 @@ buttonForKeyboardLetter <- function(theText, extraClass = NULL) {
   # That will have its $attribs$class = "btn btn-default action-button".
   # "btn-default" interferes with our ability to style its background color.
   # We need to edit out the "btn-default" from that attribute.
-  desiredClass <- paste("btn action-button", theClass)
-  classyButton$attribs$class <- desiredClass
+  
+  # Only works if I know what the whole string should be:
+  # desiredClass <- paste("btn action-button", theClass)
+  # classyButton$attribs$class <- desiredClass
+  
+  # Works whatever the classes are:
+  classyButton$attribs$class <- str_replace(classyButton$attribs$class,
+                                            " btn-default ",
+                                            " ")
 
   tags$td(classyButton, class=theClass)
+}
+
+editWithSubstring <- function(testString = "btn btn-default action-button") {
+  resultString <- str_replace(testString, " btn-default ", " ")
 }

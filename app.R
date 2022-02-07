@@ -40,7 +40,9 @@ ui <- fluidPage(
           htmlOutput("letterTable"),
           htmlOutput("keyboardTables")
         )
-    )
+    ),
+
+    tags$footer("Thanks to the coolbutuseless/wordle package", class = "footer")
 )
 
 handleLetterKey <- function(rVals, aLetter) {
@@ -56,21 +58,6 @@ handleLetterKey <- function(rVals, aLetter) {
   }
 
   return(rVals)
-}
-
-updateKeyClasses0 <- function(sought, lastGuess, keyClasses) {
-  code = evaluate_a_guess(sought, lastGuess)
-  for (i in 1:5) {
-    class <- classFromCode(code, i)
-    letter <- substr(lastGuess, i, i)
-    indexVector <- (keyClasses[["Letter"]] == letter)
-    currentCode <- keyClasses$BestClass[indexVector]
-    if ((currentCode == "unknown") ||
-        ((currentCode == "wrong_place") && (class == "correct"))) {
-      keyClasses$BestClass[indexVector] <- class
-    }
-  }
-  return(keyClasses)
 }
 
 updateKeyClasses <- function(code,
@@ -117,14 +104,15 @@ server <- function(input, output) {
                                                    wordle_solns[today("EST") -
                                                                 as.Date("2021-06-19")]),
                         theHelper = WordleHelper$new(5),
-                        theWords = c())
+                        theWords = c(),
+                        theSortedSuggestions = initial_suggestions)
 
     lapply(unlist(str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "")),
            function(aLetter) observeLetterEvent(aLetter, input, r))
     
     observeEvent(input$Sought, {
       if(str_length(input$Sought) == 5) {
-        message("Observed change in input$Sought, new value is '", input$Sought, "'")
+        message("New target word: '", input$Sought, "'")
         r$nKeys <- 0
         r$Done <- FALSE
         r$Won <- FALSE
@@ -142,9 +130,8 @@ server <- function(input, output) {
                                     debug = TRUE,
                                     target_word = str_to_lower(input$Sought))
         r$theHelper <- WordleHelper$new(5)
-        message("observe inputSought wants to update r$words")
         r$theWords <- r$theHelper$words
-        message("OK, returned from that")
+        r$theSortedSuggestions <- initial_suggestions
         r$Done <- FALSE
       }
     })

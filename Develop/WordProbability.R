@@ -7,28 +7,10 @@ library(tidyverse)
 #  "until", misses 2050
 #  "adieu" followed by "story" is guaranteed to have at least one hit
 
-
 get_words_of_given_length <- function(wordLength = 5) {
   # Make letter_counts table like letter_counts.csv from /usr/share/dict/words
   allWords <- read_lines("/usr/share/dict/words")
   wordsWithGivenLength <- allWords[wordLength == str_length(allWords)]
-}
-
-# Moved routine filter_words_by_pattern to TopNRemainingWords.R
-
-number_of_matches <- function(vectorOfWords, aPattern) {
-  length(vectorOfWords[str_detect(vectorOfWords, aPattern)])
-}
-
-make_letter_counts <- function(vectorOfWords) {
-  # Make table like letter_counts.csv from list of words of given length
-  theAlphabet <-  "abcdefghijklmnopqrstuvwxyz"
-  letterVector <- unlist(strsplit(theAlphabet, ""))
-  countVector <- rep(0, times = length(letterVector))
-  for (i in 1:length(letterVector)) {
-    countVector[i] <- number_of_matches(vectorOfWords, letterVector[i])
-  }
-  letter_counts <- tibble(Letter = letterVector, Words = countVector)
 }
 
 make_p_miss <- function(letter_counts) {
@@ -44,41 +26,147 @@ p_word_no_hits <- function(aWord, miss_probs, known_letters = c()) {
   # word
 }
 
-# Moved function pattern_for_match to TopNRemainingWords.R
-# Moved function pattern_for_not_here to TopNRemainingWords.R
-# Moved function negative_pattern_for_not_here to TopNRemainingWords.R
-# Moved function negative_pattern_for_nowhere to TopNRemainingWords.R
-# Moved function possibilities_from_one_probe_letter to TopNRemainingWords.R
-# Moved function possibilities_from_one_probe to TopNRemainingWords.R
-# Moved function possibilities_from_history to TopNRemainingWords.R
-# Moved function evaluate_a_guess to its own module EvaluateAGuess.R
-# Moved function probe_from_guess to TopNRemainingWords.R
-
-possibilities_from_guesses <- function(theTarget, theGuesses, vectorOfWords = NULL,
-                                       traceThisRoutine = FALSE, prepend = "") {
-  theProbes <- vector()
-  for (i in length(theGuesses)) {
-    theProbes[i] <- probe_from_guess(theTarget, theGuesses[i])
-  }
-  possibilities_from_history(theProbes, vectorOfWords = vectorOfWords,
-                             debug = FALSE, prepend = myPrepend)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Return a the total of letter_counts[<all letters in a word>]
+#' 
+#' @param aWord A word
+#' @param theCounts A tibble with Letter = c('a':'z') as it were,
+#' Words = an integer
+#' 
+#' @return an integer
+LCTotal <- function(aWord, countTable = countTable) {
+  # sum(filter(letterCounts, Letter %in% unlist(str_split({aWord}, "")))$Words)
+  message("letterCountTotal ", aWord)
+  message("countTable", countTable[1,])
+  sum(filter(countTable, Letter %in% unlist(str_split({aWord}, "")))$Words)
 }
 
-testFilter <- function(switchArg) {
-  cat(file = stderr(), "\n\nTesting filter in mode", switchArg, "\n")
-  theProbes <- switch(switchArg,
-                      one = c("starexxxYx", "untilxxxYx", "comfyGxYxx", "crimpGGGGG"),
-                      two = c("starexxxYx", "untilxxxYx", "comfyGxYxx", "crimpGGGGG"),
-                      three = c("starexxxYx", "untilxxxYx", "comfyGxYxx", "crimpGGGGG"),
-                      four = c("starexxxYx", "untilxxxYx", "comfyGxYxx", "crimpGGGGG"))
-  theWordVector <- switch(switchArg,
-                          one = NULL,
-                          two = NULL,
-                          three = c("stamp", "tramp", "cramp", "clamp", "axiom",
-                                    "clump", "chirp", "brick", "corgi", "crick",
-                                    "crier", "crimp"),
-                          four = c("stamp", "tramp", "cramp",
-                                    "clump", "chirp", "brick", "corgi", "crick",
-                                    "crier", "crimp"))
-  possibilities_from_history(theProbes, theWordVector, traceThisRoutine = TRUE)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Stuff below here is needed for the real project, above is development only
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Count how many words in a vector of words match a given pattern
+#' 
+#' @param vectorOfWords A vector of words to examine for a pattern
+#' @param aPattern A pattern to look for
+#'
+#' @returns the number of words which match the pattern
+number_of_matches <- function(vectorOfWords, aPattern) {
+  length(vectorOfWords[str_detect(vectorOfWords, aPattern)])
+}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Count how many words in input tibble contain each letter A-Z, case
+#' insensitive
+#' 
+#' @param candidateTibble A vector of words, count letter presence in it
+#' 
+#' @return A a 2-column tibble, Letter = c("a":"z"), Words = number of words
+#' in a vector of words input to the function which contain the Letter
+countWordsByLetter <- function(candidateTibble) {
+  theAlphabet <-  "abcdefghijklmnopqrstuvwxyz"
+  letterVector <- unlist(strsplit(theAlphabet, ""))
+  countVector <- rep(0, times = length(letterVector))
+  vectorOfWords <- candidateTibble$NoMatch
+  for (i in 1:length(letterVector)) {
+    # Make pattern '[aA]' from input 'a' or 'A'
+    aPattern <- paste0("[",
+                       str_to_upper(letterVector[i]),
+                       str_to_lower(letterVector[i]),
+                       "]")
+    countVector[i] <- number_of_matches(vectorOfWords, aPattern)
+  }
+  letter_counts <- tibble(Letter = letterVector, Words = countVector)
+}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Return a vector of letterCountTotal for each word in a vector of words 
+#' 
+#' @param vectorOfWords A vector of words
+#' @param letterCounts A tibble with Letter = c('a':'z') as it were,
+#' Words = an integer
+#' 
+#' @return a vector of the sum of letterCounts for all letters of each word
+letterCountTotalVector <- function(vectorOfWords, letterCounts) {
+  # FUN <- function(aWord) {
+  #   theFilter <- letterCounts %>% 
+  #     filter(Letter %in% unlist(str_split(aWord, "")))
+  #   as.integer(sum(theFilter$Words))
+  # }
+  # 
+  # theCountVector0 <- unlist(lapply(vectorOfWords, FUN))
+  # 
+  theCountVector <- unlist(lapply(vectorOfWords,
+                                  function(aWord) {
+                                    theFilter <- letterCounts %>% 
+                                      filter(Letter %in% unlist(str_split(aWord, "")))
+                                    as.integer(sum(theFilter$Words))
+                                  }))
+}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Sort the list of candidate words (suggested next guess) by probability of
+#' hitting at least one UNMATCHED letter in a random word chosen from that
+#' list, that is, a letter in a position where no guess has returned green.
+#' Every candidate has all the matched letters in common with every other one,
+#' so we split all the words, count how many distinct letters there are in
+#' each position, throw away those positions, count how many times each letter
+#' occurs in what's left; use those counts to compute probability of a word
+#' not hitting anything useful.
+#' 
+#' @param candidateList A vector of words which are possible solutions given what we
+#' know so far
+#' @return That list sorted by the word which hits the most others in unmatched places
+#' (and therefore eliminates the most if it returns empty)
+sortCandidatesByUnmatchedLettersHit <- function(candidateList) {
+  # Count letter occurrence among words in target list
+  candidateTibble <- tibble(Candidates = candidateList) %>%
+    mutate(L1 = substr(Candidates, 1,1),
+           L2 = substr(Candidates, 2,2),
+           L3 = substr(Candidates, 3,3),
+           L4 = substr(Candidates, 4,4),
+           L5 = substr(Candidates, 5,5))
+  
+  summary <- candidateTibble %>%
+    summarize(L1 = n_distinct(L1),
+              L2 = n_distinct(L2),
+              L3 = n_distinct(L3),
+              L4 = n_distinct(L4),
+              L5 = n_distinct(L5))
+  
+  # unmatchedLetters <- candidateTibble %>%
+  #   select("Candidates", all_of([[summary]]))
+
+  # Replace the letters all candidates have in common with blank
+  for (i in 2:6) {
+    if (summary[i - 1] == 1)
+      candidateTibble[,i] <- ""
+  }
+
+  # Paste back all the letters that are not in common. These are the ones
+  # that we need more information on.
+  reassemble <- candidateTibble %>%
+    mutate(NoMatch = paste0(L1, L2, L3, L4, L5), .keep = "unused")
+  
+  # I now have a tibble with columns "Candidates" and "NoMatch". Count the number
+  # of words each letter occurs in.
+  letterCounts <- countWordsByLetter(reassemble)
+
+  # I want a vector of sum(letter_counts[foreach(letter in the word)]
+  # corresponding to a vector of words
+  theLetterCountVector <- letterCountTotalVector(unlist(reassemble$NoMatch), letterCounts)
+  
+  wordsAndCounts <- tibble(Words = candidateList, TotalCounts = unlist(theLetterCountVector))
+  
+  topCountsFirst <- arrange(wordsAndCounts, desc(TotalCounts))
+
+  return(unlist(topCountsFirst$Words))
+}
+
+testSort <- function(aVectorOfWords = c("stamp", "trAmp", "cramp", "clAmp",
+                                        "clump", "crimp")) {
+  result <- sortCandidatesByUnmatchedLettersHit(aVectorOfWords)
 }
