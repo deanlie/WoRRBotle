@@ -1,5 +1,6 @@
 {
   "input": {
+    "showHints": false,
     "Sought": "PANIC",
     "typedA": 0,
     "typedB": 0,
@@ -28,7 +29,9 @@
     "typedW": 0,
     "typedX": 0,
     "typedY": 0,
-    "typedZ": 0
+    "typedZ": 0,
+    "userInputQ": "userTgtNo",
+    "userTarget": false
   },
   "output": {
     "keyboardTables": {
@@ -43,12 +46,7 @@
 
       ]
     },
-    "somePossibleWords": {
-      "html": "<h4 class=\"suggestions\">Suggestions:<\/h4> <p class=\"suggestions\">PANIC<\/p><p class=\"suggestions\">PANIM<\/p><p class=\"suggestions\">PAVIN<\/p>",
-      "deps": [
-
-      ]
-    }
+    "somePossibleWords": null
   },
   "export": {
 

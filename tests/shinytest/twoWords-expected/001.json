@@ -1,5 +1,6 @@
 {
   "input": {
+    "showHints": false,
     "Sought": "PANIC",
     "typedA": 2,
     "typedB": 0,
@@ -28,7 +29,9 @@
     "typedW": 0,
     "typedX": 0,
     "typedY": 0,
-    "typedZ": 0
+    "typedZ": 0,
+    "userInputQ": "userTgtNo",
+    "userTarget": false
   },
   "output": {
     "keyboardTables": {
@@ -43,12 +46,7 @@
 
       ]
     },
-    "somePossibleWords": {
-      "html": "<h4 class=\"suggestions\">Suggestions:<\/h4> <p class=\"suggestions\">AROSE<\/p><p class=\"suggestions\">ARISE<\/p><p class=\"suggestions\">RAISE<\/p><p class=\"suggestions\">ALOES<\/p><p class=\"suggestions\">ARLES<\/p><p class=\"suggestions\">EARLS<\/p><p class=\"suggestions\">LASER<\/p><p class=\"suggestions\">REALS<\/p><p class=\"suggestions\">STOAE<\/p><p class=\"suggestions\">ASTER<\/p><p class=\"suggestions\">RATES<\/p><p class=\"suggestions\">STARE<\/p><p class=\"suggestions\">TARES<\/p><p class=\"suggestions\">TASER<\/p><p class=\"suggestions\">TEARS<\/p><p class=\"suggestions\">AISLE<\/p><p class=\"suggestions\">AEONS<\/p><p class=\"suggestions\">EARNS<\/p><p class=\"suggestions\">NARES<\/p><p class=\"suggestions\">NEARS<\/p><p class=\"suggestions\">SANER<\/p><p class=\"suggestions\">SNARE<\/p><p class=\"suggestions\">ANISE<\/p><p class=\"suggestions\">UREAS<\/p><p class=\"suggestions\">DARES<\/p>",
-      "deps": [
-
-      ]
-    }
+    "somePossibleWords": null
   },
   "export": {
 
