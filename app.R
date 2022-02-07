@@ -95,14 +95,15 @@ server <- function(input, output) {
                                                    wordle_solns[today("EST") -
                                                                 as.Date("2021-06-19")]),
                         theHelper = WordleHelper$new(5),
-                        theWords = c())
+                        theWords = c(),
+                        theSortedSuggestions = initial_suggestions)
 
     lapply(unlist(str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "")),
            function(aLetter) observeLetterEvent(aLetter, input, r))
     
     observeEvent(input$Sought, {
       if(str_length(input$Sought) == 5) {
-        message("Observed change in input$Sought, new value is '", input$Sought, "'")
+        message("New target word: '", input$Sought, "'")
         r$nKeys <- 0
         r$Done <- FALSE
         r$Won <- FALSE
@@ -120,9 +121,8 @@ server <- function(input, output) {
                                     debug = TRUE,
                                     target_word = str_to_lower(input$Sought))
         r$theHelper <- WordleHelper$new(5)
-        message("observe inputSought wants to update r$words")
         r$theWords <- r$theHelper$words
-        message("OK, returned from that")
+        r$theSortedSuggestions <- initial_suggestions
         r$Done <- FALSE
       }
     })
@@ -149,6 +149,7 @@ server <- function(input, output) {
             } else {
               r$theHelper$update(lcNewGuess, response)
               r$theWords <- r$theHelper$words
+              r$theSortedSuggestions <- sortCandidatesByUnmatchedLettersHit(r$theHelper$words)
               r$nKeys <- 0
               r$KeyClasses <- updateKeyClasses(response,
                                                r$Guesses[r$guessNumber],
@@ -196,7 +197,7 @@ server <- function(input, output) {
         if (r$Won) {
           HTML(paste(tags$h4("You won!", style = "color: #44FF44")))
         } else {
-          HTML(topNRemainingWords(r$theWords, 25))
+          HTML(topNRemainingWords(r$theSortedSuggestions, 25))
         }
       }
     })
