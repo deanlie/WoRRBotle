@@ -28,8 +28,8 @@ ui <- fluidPage(
           tabsetPanel(
             id = "switcher",
             type = "hidden",
-            tabPanelBody("panel1", 
-                         textInput("Sought", "Answer!", "", '100px', "")),
+            tabPanelBody("panel1",
+                         passwordInput("Sought", "Answer!", "", '100px', placeholder = "?????")),
             tabPanelBody("panel2", "")),
           checkboxInput("showHints", "Show suggestions?"),
           htmlOutput("somePossibleWords")
@@ -105,12 +105,14 @@ server <- function(input, output) {
                                                                 as.Date("2021-06-19")]),
                         theHelper = WordleHelper$new(5),
                         theWords = c(),
-                        theSortedSuggestions = initial_suggestions)
+                        theSortedSuggestions = initial_suggestions,
+                        suggestionsAreCurrent = TRUE)
 
     lapply(unlist(str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "")),
            function(aLetter) observeLetterEvent(aLetter, input, r))
     
     observeEvent(input$Sought, {
+      # OUCH validate input as present in words list or you'll crash on WordleGame$new
       if(str_length(input$Sought) == 5) {
         message("New target word: '", input$Sought, "'")
         r$nKeys <- 0
@@ -132,6 +134,7 @@ server <- function(input, output) {
         r$theHelper <- WordleHelper$new(5)
         r$theWords <- r$theHelper$words
         r$theSortedSuggestions <- initial_suggestions
+        r$suggestionsAreCurrent <- TRUE
         r$Done <- FALSE
       }
     })
@@ -160,6 +163,9 @@ server <- function(input, output) {
               r$theWords <- r$theHelper$words
               if (input$showHints) {
                 r$theSortedSuggestions <- sortCandidatesByUnmatchedLettersHit(r$theHelper$words)
+                r$suggestionsAreCurrent <- TRUE
+              } else {
+                r$suggestionsAreCurrent <- FALSE
               }
               r$nKeys <- 0
               r$KeyClasses <- updateKeyClasses(response,
@@ -209,6 +215,10 @@ server <- function(input, output) {
           HTML(paste(tags$h4("You won!", style = "color: #44FF44")))
         } else {
           if (input$showHints) {
+            if (!r$suggestionsAreCurrent) {
+              r$theSortedSuggestions <- sortCandidatesByUnmatchedLettersHit(r$theHelper$words)
+              r$suggestionsAreCurrent <- TRUE
+            }
             HTML(topNRemainingWords(r$theSortedSuggestions, 25))
           }
         }
