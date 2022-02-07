@@ -11,10 +11,12 @@ README
 <!-- badges: end -->
 
 **WoRRBotle** is a Shiny wordle bot. It allows you to play wordle using
-either a word chosen by the bot or a word you choose – which is not much
-of a puzzle, but is good for testing your strategy. It presents a list
+either a word chosen by the bot or a word you choose. It is playable as
+a two-person game, because the word you choose is entered like a
+password so if neither player looks at the other’s hands while that
+person is typing, the chosen word is never shown. It can present a list
 of words which are possible choices given the guesses so far, arranged
-by its idea of which are more likely.
+by its idea of which are more likely. That list is hidden by default
 
 This was written just as an exercise in Shiny but holy smokes, I am
 learning a lot about improving Shiny interfaces, R Markdown, and open
