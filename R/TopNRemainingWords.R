@@ -69,7 +69,7 @@ letterCountTotalVector <- function(vectorOfWords, letterCounts) {
 sortCandidatesByUnmatchedLettersHit <- function(candidateList) {
   message("Looking for best candidates - ",
           length(candidateList),
-          "words remain")
+          " words remain")
 
   # Count letter occurrence among words in target list
   candidateTibble <- tibble(Candidates = candidateList) %>%
