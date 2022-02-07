@@ -122,4 +122,14 @@ button.action-button.absent {
   background-color: #66686a;
 }
 
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px; /* Set the fixed height of the footer here */
+  text-align: center;
+  font-size: .75rem;
+  color: #808080;
+}
+
 

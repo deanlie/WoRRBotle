@@ -33,7 +33,9 @@ ui <- fluidPage(
           htmlOutput("letterTable"),
           htmlOutput("keyboardTables")
         )
-    )
+    ),
+
+    tags$footer("Thanks to the coolbutuseless/wordle package", class = "footer")
 )
 
 handleLetterKey <- function(rVals, aLetter) {
