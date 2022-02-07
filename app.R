@@ -120,13 +120,13 @@ server <- function(input, output) {
     })
     
     observeEvent(input$Sought, {
+      r$Error <- NULL
       if(str_length(input$Sought) == 5) {
         if (str_to_lower(input$Sought) %in% r$theGame$words) {
           r$nKeys <- 0
           r$Done <- FALSE
           r$Won <- FALSE
           r$Guess <- "     "
-          r$Error <- NULL
           r$guessNumber = 1
           r$Guesses <- rep("     ", 6)
           r$Responses <- rep("  ", 6)
