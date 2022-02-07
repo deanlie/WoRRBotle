@@ -1,5 +1,6 @@
 {
   "input": {
+    "showHints": false,
     "Sought": "panic",
     "typedA": 0,
     "typedB": 0,
@@ -28,7 +29,9 @@
     "typedW": 0,
     "typedX": 0,
     "typedY": 0,
-    "typedZ": 0
+    "typedZ": 0,
+    "userInputQ": "userTgtNo",
+    "userTarget": false
   },
   "output": {
     "keyboardTables": {

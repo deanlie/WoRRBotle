@@ -1,5 +1,6 @@
 {
   "input": {
+    "showHints": false,
     "Sought": "panic",
     "typedA": 0,
     "typedB": 0,
@@ -28,7 +29,9 @@
     "typedW": 0,
     "typedX": 0,
     "typedY": 0,
-    "typedZ": 0
+    "typedZ": 0,
+    "userInputQ": "userTgtNo",
+    "userTarget": false
   },
   "output": {
     "keyboardTables": {
@@ -43,12 +46,7 @@
 
       ]
     },
-    "somePossibleWords": {
-      "html": "<h4 class=\"suggestions\">Suggestions:<\/h4> <p class=\"suggestions\">AAHED<\/p><p class=\"suggestions\">AALII<\/p><p class=\"suggestions\">AARGH<\/p><p class=\"suggestions\">AARTI<\/p><p class=\"suggestions\">ABACA<\/p><p class=\"suggestions\">ABACI<\/p><p class=\"suggestions\">ABACK<\/p><p class=\"suggestions\">ABACS<\/p><p class=\"suggestions\">ABAFT<\/p><p class=\"suggestions\">ABAKA<\/p><p class=\"suggestions\">ABAMP<\/p><p class=\"suggestions\">ABAND<\/p><p class=\"suggestions\">ABASE<\/p><p class=\"suggestions\">ABASH<\/p><p class=\"suggestions\">ABASK<\/p><p class=\"suggestions\">ABATE<\/p><p class=\"suggestions\">ABAYA<\/p><p class=\"suggestions\">ABBAS<\/p><p class=\"suggestions\">ABBED<\/p><p class=\"suggestions\">ABBES<\/p><p class=\"suggestions\">ABBEY<\/p><p class=\"suggestions\">ABBOT<\/p><p class=\"suggestions\">ABCEE<\/p><p class=\"suggestions\">ABEAM<\/p><p class=\"suggestions\">ABEAR<\/p>",
-      "deps": [
-
-      ]
-    }
+    "somePossibleWords": null
   },
   "export": {
 
