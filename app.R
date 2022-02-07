@@ -24,13 +24,17 @@ ui <- fluidPage(
     # Sidebar with the controls 
     sidebarLayout(
         sidebarPanel(
-          checkboxInput("userTarget", "User inputs answer?", value = TRUE, width = NULL),
+          checkboxInput("userTarget", "User inputs answer?", value = FALSE, width = NULL),
           tabsetPanel(
-            id = "switcher",
+            id = "userInputQ",
             type = "hidden",
-            tabPanelBody("panel1",
-                         passwordInput("Sought", "Answer!", "", '100px', placeholder = "?????")),
-            tabPanelBody("panel2", "")),
+            tabPanelBody("userTgtYes",
+                         passwordInput("Sought",
+                                       "Secret answer",
+                                       "",
+                                       '100px',
+                                       placeholder = "?????")),
+            tabPanelBody("userTgtNo", "")),
           checkboxInput("showHints", "Show suggestions?"),
           htmlOutput("somePossibleWords")
         ),
@@ -98,8 +102,6 @@ server <- function(input, output) {
                           BestClass = "unknown",
                           Modified = FALSE),
                         theGame = WordleGame$new(wordle_dict,
-                                                 debug = TRUE,
-                                                 # 
                                                  target_word = 
                                                    wordle_solns[today("EST") -
                                                                 as.Date("2021-06-19")]),
@@ -111,31 +113,40 @@ server <- function(input, output) {
     lapply(unlist(str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "")),
            function(aLetter) observeLetterEvent(aLetter, input, r))
     
+    observeEvent(input$userTarget, {
+      r$Error <- NULL
+      updateTabsetPanel(inputId = "userInputQ",
+                        selected = if (input$userTarget) "userTgtYes" else "userTgtNo")
+    })
+    
     observeEvent(input$Sought, {
-      # OUCH validate input as present in words list or you'll crash on WordleGame$new
       if(str_length(input$Sought) == 5) {
-        message("New target word: '", input$Sought, "'")
-        r$nKeys <- 0
-        r$Done <- FALSE
-        r$Won <- FALSE
-        r$Guess <- "     "
-        r$Error <- NULL
-        r$guessNumber = 1
-        r$Guesses <- rep("     ", 6)
-        r$Responses <- rep("  ", 6)
-        r$KeyClasses <- tibble(Letter = unlist(
-          str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                    boundary("character"))),
-          BestClass = "unknown",
-          Modified = FALSE)
-        r$theGame <- WordleGame$new(wordle_dict,
-                                    debug = TRUE,
-                                    target_word = str_to_lower(input$Sought))
-        r$theHelper <- WordleHelper$new(5)
-        r$theWords <- r$theHelper$words
-        r$theSortedSuggestions <- initial_suggestions
-        r$suggestionsAreCurrent <- TRUE
-        r$Done <- FALSE
+        if (str_to_lower(input$Sought) %in% r$theGame$words) {
+          r$nKeys <- 0
+          r$Done <- FALSE
+          r$Won <- FALSE
+          r$Guess <- "     "
+          r$Error <- NULL
+          r$guessNumber = 1
+          r$Guesses <- rep("     ", 6)
+          r$Responses <- rep("  ", 6)
+          r$KeyClasses <- tibble(Letter = unlist(
+            str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                      boundary("character"))),
+            BestClass = "unknown",
+            Modified = FALSE)
+          r$theGame <- WordleGame$new(wordle_dict,
+                                      debug = FALSE,
+                                      target_word = str_to_lower(input$Sought))
+          r$theHelper <- WordleHelper$new(5)
+          r$theWords <- r$theHelper$words
+          r$theSortedSuggestions <- initial_suggestions
+          r$suggestionsAreCurrent <- TRUE
+          r$Done <- FALSE
+        } else {
+          # Display an error message when illegal word is input
+          r$Error <- "Not a valid word in the word list"
+        }
       }
     })
     
@@ -176,13 +187,15 @@ server <- function(input, output) {
             if (r$guessNumber > 6) {
               r$Error <- "No more guesses! Sorry, game over."
               r$Done <- TRUE
+            } else {
+              r$Error <- NULL
             }
           } else {
             r$Error <- "Not a valid word in the word list"
           }
-       } else {
+        } else {
           r$Error <- "No more guesses! Sorry, game over."
-         }
+        }
       }
     })
     
@@ -191,6 +204,7 @@ server <- function(input, output) {
         substr(r$Guesses[r$guessNumber], r$nKeys, r$nKeys) <- " "
         r$nKeys <- r$nKeys - 1
       }
+      r$Error <- NULL
     })
 
     output$letterTable <- renderUI({
@@ -209,9 +223,12 @@ server <- function(input, output) {
 
     output$somePossibleWords <- renderUI({
       if(!is.null(r$Error)) {
+        # OUCH Would it be cleaner to use class/stylesheet rather than hardcoded color?
         HTML(paste(tags$h4(r$Error, style = "color: red")))
       } else {
         if (r$Won) {
+          # OUCH Vary this depending on how many guesses it took
+          # OUCH Would it be cleaner to use class/stylesheet rather than hardcoded color?
           HTML(paste(tags$h4("You won!", style = "color: #44FF44")))
         } else {
           if (input$showHints) {
