@@ -24,17 +24,38 @@ ui <- fluidPage(
     # Sidebar with the controls 
     sidebarLayout(
         sidebarPanel(
-          checkboxInput("userTarget", "User inputs answer?", value = FALSE, width = NULL),
+          # radioButtons(
+          #   inputId,
+          #   label,
+          #   choices = NULL,
+          #   selected = NULL,
+          #   inline = FALSE,
+          #   width = NULL,
+          #   choiceNames = NULL,
+          #   choiceValues = NULL
+          # )
+          radioButtons("targetType",
+                       "Target Word Source",
+                       choices = list(Random = "Random", Date = "Date", User = "User"),
+                       selected = "Random",
+                       inline = FALSE),
           tabsetPanel(
             id = "userInputQ",
             type = "hidden",
-            tabPanelBody("userTgtYes",
+            tabPanelBody("User",
                          passwordInput("Sought",
                                        "Secret answer",
                                        "",
                                        '100px',
                                        placeholder = "?????")),
-            tabPanelBody("userTgtNo", "")),
+            tabPanelBody("Random",
+                         tags$p("Random action button here")
+                         # actionButton(OUCH)
+                         ),
+            tabPanelBody("Date",
+                         tags$p("Slider for date here")
+                         # sliderInput(OUCH)
+                         )),
           checkboxInput("showHints", "Show suggestions?"),
           htmlOutput("somePossibleWords")
         ),
@@ -113,10 +134,9 @@ server <- function(input, output) {
     lapply(unlist(str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "")),
            function(aLetter) observeLetterEvent(aLetter, input, r))
     
-    observeEvent(input$userTarget, {
+    observeEvent(input$targetType, {
       r$Error <- NULL
-      updateTabsetPanel(inputId = "userInputQ",
-                        selected = if (input$userTarget) "userTgtYes" else "userTgtNo")
+      updateTabsetPanel(inputId = "userInputQ", selected = input$targetType)
     })
     
     observeEvent(input$Sought, {
