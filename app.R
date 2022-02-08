@@ -155,6 +155,25 @@ server <- function(input, output) {
       updateTabsetPanel(inputId = "userInputQ", selected = input$targetType)
     })
     
+    observeEvent(input$randomPuzzle, {
+      if (is.na(input$randomPuzzle)) {
+        message("Observed change in input$randomPuzzle, it is NA")
+      } else {
+        message("Observed change in input$randomPuzzle, it is '", input$randomPuzzle, "'")
+      }
+      if (!is.null(input$randomPuzzle) && !is.na(input$randomPuzzle)) {
+        r$Sought <- sample(words, 1)
+        if (is.na(r$Sought)) {
+          message("  ... r$Sought is NA")
+        } else {
+          message("  ... r$Sought is ", r$Sought)
+        }
+      } else {
+        message("  ... no change to r$Sought here")
+      }
+      message("   exit observeEvent(input$randomPuzzle, {...}")
+    })
+    
     observeEvent(input$Sought, {
       if (is.na(input$Sought)) {
         message("Observed change in input$Sought, it is NA")
