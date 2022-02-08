@@ -140,7 +140,7 @@ server <- function(input, output) {
                           BestClass = "unknown",
                           Modified = FALSE),
                         Sought = yesterdaysWord,
-                        theGame = WordleGame$new(wordle_dict,
+                        theGame = WordleGame$new(wordle_solns,
                                                  target_word = yesterdaysWord),
                         theHelper = WordleHelper$new(5),
                         theWords = c(),
@@ -155,14 +155,14 @@ server <- function(input, output) {
       updateTabsetPanel(inputId = "userInputQ", selected = input$targetType)
     })
     
-    observeEvent(input$randomPuzzle, {
+    observeEvent(input$randomPuzzle, ignoreInit = TRUE, {
       if (is.na(input$randomPuzzle)) {
         message("Observed change in input$randomPuzzle, it is NA")
       } else {
         message("Observed change in input$randomPuzzle, it is '", input$randomPuzzle, "'")
       }
       if (!is.null(input$randomPuzzle) && !is.na(input$randomPuzzle)) {
-        r$Sought <- sample(words, 1)
+        r$Sought <- sample(wordle_solns, 1)
         if (is.na(r$Sought)) {
           message("  ... r$Sought is NA")
         } else {
@@ -174,7 +174,7 @@ server <- function(input, output) {
       message("   exit observeEvent(input$randomPuzzle, {...}")
     })
     
-    observeEvent(input$puzzleDate, {
+    observeEvent(input$puzzleDate, ignoreInit = TRUE, {
       message("Observed change in input$puzzleDate")
       str(input$puzzleDate)
       if (is.na(input$puzzleDate)) {
@@ -183,7 +183,7 @@ server <- function(input, output) {
         message("Observed change in input$puzzleDate, it is '", input$puzzleDate, "'")
       }
       if (!is.null(input$puzzleDate) && !is.na(input$puzzleDate)) {
-        r$Sought <- wordle_solns[input$puzzleDate - as.Date("2021-06-19")]
+        r$Sought <- wordle_solns[input$puzzleDate - as.Date("2021-06-20")]
         if (is.na(r$Sought)) {
           message("  ... r$Sought is NA")
         } else {
@@ -195,7 +195,7 @@ server <- function(input, output) {
       message("   exit observeEvent(input$puzzleDate, {...}")
     })
     
-    observeEvent(input$Sought, {
+    observeEvent(input$Sought, ignoreInit = TRUE, {
       if (is.na(input$Sought)) {
         message("Observed change in input$Sought, it is NA")
       } else {
@@ -225,7 +225,7 @@ server <- function(input, output) {
                       boundary("character"))),
             BestClass = "unknown",
             Modified = FALSE)
-          r$theGame <- WordleGame$new(wordle_dict,
+          r$theGame <- WordleGame$new(wordle_solns,
                                       debug = FALSE,
                                       target_word = str_to_lower(input$Sought))
           r$theHelper <- WordleHelper$new(5)
@@ -270,7 +270,7 @@ server <- function(input, output) {
                           boundary("character"))),
                 BestClass = "unknown",
                 Modified = FALSE)
-              r$theGame <- WordleGame$new(wordle_dict,
+              r$theGame <- WordleGame$new(wordle_solns,
                                           debug = FALSE,
                                           target_word = str_to_lower(r$Sought))
               r$theHelper <- WordleHelper$new(5)
