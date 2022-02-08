@@ -42,16 +42,17 @@ ui <- fluidPage(
           tabsetPanel(
             id = "userInputQ",
             type = "hidden",
+            selected = "Random",
+            tabPanelBody("Random",
+                         # OUCH add an ID or class to allow styling
+                         actionButton("randomPuzzle", "Hit me")
+                         ),
             tabPanelBody("User",
                          passwordInput("Sought",
                                        "Secret answer",
                                        "",
                                        '100px',
                                        placeholder = "?????")),
-            tabPanelBody("Random",
-                         # OUCH add an ID or class to allow styling
-                         actionButton("randomPuzzle", "Hit me")
-                         ),
             tabPanelBody("Archive",
                          # OUCH track down styling of date calendar day text
                          dateInput("puzzleDate",
@@ -155,7 +156,21 @@ server <- function(input, output) {
     })
     
     observeEvent(input$Sought, {
-      r$Error <- NULL
+      if (is.na(input$Sought)) {
+        message("Observed change in input$Sought, it is NA")
+      } else {
+        message("Observed change in input$Sought, it is '", input$Sought, "'")
+      }
+      if (!is.na(input$Sought) && !is.null(input$Sought) && str_length(input$Sought) > 0) {
+        message("   .. will set r$Sought from it")
+        r$Sought <- input$Sought
+        if (is.na(r$Sought)) {
+          message("  ... r$Sought is NA")
+          r$Error <- NULL
+        } else {
+          message("  ... r$Sought is ", r$Sought)
+        }
+      }
       if(str_length(input$Sought) == 5) {
         if (str_to_lower(input$Sought) %in% r$theGame$words) {
           r$nKeys <- 0
@@ -183,6 +198,56 @@ server <- function(input, output) {
           r$Error <- "Not a valid word in the word list"
         }
       }
+    })
+    
+    observeEvent(r$Sought, {
+      if (is.na(r$Sought)) {
+        message("Observed change in r$Sought, it is NA")
+      } else {
+        message("Observed change in r$Sought, it is ", r$Sought)
+      }
+      if (!is.null(r$Sought) && !is.na(r$Sought)) {
+        message(" ... after first 'if'")
+        str(r$Sought)
+        if (r$Sought != '') {
+          message(" ... after second 'if'")
+          str(r$Sought)
+          r$Error <- NULL
+          message(" ... str_length(r$Sought) is ", str_length(r$Sought))
+          if(str_length(r$Sought) == 5) {
+            message(" ... after third 'if'")
+            if (str_to_lower(r$Sought) %in% r$theGame$words) {
+              message(" ... after fourth 'if'")
+              r$nKeys <- 0
+              r$Done <- FALSE
+              r$Won <- FALSE
+              r$Guess <- "     "
+              r$guessNumber = 1
+              r$Guesses <- rep("     ", 6)
+              r$Responses <- rep("  ", 6)
+              r$KeyClasses <- tibble(Letter = unlist(
+                str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                          boundary("character"))),
+                BestClass = "unknown",
+                Modified = FALSE)
+              r$theGame <- WordleGame$new(wordle_dict,
+                                          debug = FALSE,
+                                          target_word = str_to_lower(r$Sought))
+              r$theHelper <- WordleHelper$new(5)
+              r$theWords <- r$theHelper$words
+              r$theSortedSuggestions <- initial_suggestions
+              r$suggestionsAreCurrent <- TRUE
+              r$Done <- FALSE
+            } else {
+              # Display an error message when illegal word is input
+              r$Error <- "Not a valid word in the word list"
+            }
+          } else {
+            # r$Error <- "Nothing to look for"
+          }
+        }
+      }
+      message("  exit observeEvent(r$Sought, {...}")
     })
     
     observeEvent(input$typedENTER, {
