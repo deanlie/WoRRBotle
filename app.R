@@ -57,7 +57,7 @@ ui <- fluidPage(
                          # OUCH track down styling of date calendar day text
                          dateInput("puzzleDate",
                                    "Puzzle Date",
-                                   value = NULL,
+                                   value = (today("EST") - 1),
                                    min = "2021-06-20",
                                    max = (today("EST") - 1),
                                    format = "yyyy-mm-dd",
@@ -172,6 +172,27 @@ server <- function(input, output) {
         message("  ... no change to r$Sought here")
       }
       message("   exit observeEvent(input$randomPuzzle, {...}")
+    })
+    
+    observeEvent(input$puzzleDate, {
+      message("Observed change in input$puzzleDate")
+      str(input$puzzleDate)
+      if (is.na(input$puzzleDate)) {
+        message("Observed change in input$puzzleDate, it is NA")
+      } else {
+        message("Observed change in input$puzzleDate, it is '", input$puzzleDate, "'")
+      }
+      if (!is.null(input$puzzleDate) && !is.na(input$puzzleDate)) {
+        r$Sought <- wordle_solns[input$puzzleDate - as.Date("2021-06-19")]
+        if (is.na(r$Sought)) {
+          message("  ... r$Sought is NA")
+        } else {
+          message("  ... r$Sought is ", r$Sought)
+        }
+      } else {
+        message("  ... no change to r$Sought here")
+      }
+      message("   exit observeEvent(input$puzzleDate, {...}")
     })
     
     observeEvent(input$Sought, {
