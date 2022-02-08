@@ -49,13 +49,27 @@ ui <- fluidPage(
                                        '100px',
                                        placeholder = "?????")),
             tabPanelBody("Random",
-                         tags$p("Random action button here")
-                         # actionButton(OUCH)
+                         # OUCH add an ID or class to allow styling
+                         actionButton("randomPuzzle", "Hit me")
                          ),
             tabPanelBody("Archive",
-                         tags$p("Slider for date here")
-                         # sliderInput(OUCH)
-                         )),
+                         # OUCH track down styling of date calendar day text
+                         dateInput("puzzleDate",
+                                   "Puzzle Date",
+                                   value = NULL,
+                                   min = "2021-06-20",
+                                   max = (today("EST") - 1),
+                                   format = "yyyy-mm-dd",
+                                   startview = "month",
+                                   weekstart = 0,
+                                   language = "en",
+                                   width = NULL,
+                                   autoclose = TRUE,
+                                   datesdisabled = NULL,
+                                   daysofweekdisabled = NULL
+                         )
+            )
+          ),
           checkboxInput("showHints", "Show suggestions?"),
           htmlOutput("somePossibleWords")
         ),
