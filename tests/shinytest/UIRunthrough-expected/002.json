@@ -1,0 +1,61 @@
+{
+  "input": {
+    "puzzleDate": "2022-02-06",
+    "randomPuzzle": 0,
+    "showHints": false,
+    "Sought": "",
+    "targetType": "Archive",
+    "typedA": 1,
+    "typedB": 0,
+    "typedC": 0,
+    "typedD": 0,
+    "typedDELETE": 0,
+    "typedE": 1,
+    "typedENTER": 1,
+    "typedF": 0,
+    "typedG": 0,
+    "typedH": 0,
+    "typedI": 0,
+    "typedJ": 0,
+    "typedK": 0,
+    "typedL": 1,
+    "typedM": 0,
+    "typedN": 0,
+    "typedO": 0,
+    "typedP": 0,
+    "typedQ": 0,
+    "typedR": 1,
+    "typedS": 0,
+    "typedT": 0,
+    "typedU": 0,
+    "typedV": 1,
+    "typedW": 0,
+    "typedX": 0,
+    "typedY": 0,
+    "typedZ": 0,
+    "userInputQ": "Archive"
+  },
+  "output": {
+    "keyboardTables": {
+      "html": "<table class=\"kbd\">\n  <tr>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedQ\" type=\"button\">Q<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedW\" type=\"button\">W<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedE\" type=\"button\">E<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedR\" type=\"button\">R<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedT\" type=\"button\">T<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedY\" type=\"button\">Y<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedU\" type=\"button\">U<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedI\" type=\"button\">I<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedO\" type=\"button\">O<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedP\" type=\"button\">P<\/button>\n    <\/td>\n  <\/tr>\n<\/table>  <table class=\"kbd\">\n  <tr>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedA\" type=\"button\">A<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedS\" type=\"button\">S<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedD\" type=\"button\">D<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedF\" type=\"button\">F<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedG\" type=\"button\">G<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedH\" type=\"button\">H<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedJ\" type=\"button\">J<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedK\" type=\"button\">K<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedL\" type=\"button\">L<\/button>\n    <\/td>\n  <\/tr>\n<\/table>  <table class=\"kbd\">\n  <tr>\n    <td class=\"kbd\">\n      <button class=\"btn action-button kbd\" id=\"typedENTER\" type=\"button\">ENTER<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedZ\" type=\"button\">Z<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedX\" type=\"button\">X<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedC\" type=\"button\">C<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedV\" type=\"button\">V<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedB\" type=\"button\">B<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedN\" type=\"button\">N<\/button>\n    <\/td>\n    <td class=\"kbd unknown\">\n      <button class=\"btn action-button kbd unknown\" id=\"typedM\" type=\"button\">M<\/button>\n    <\/td>\n    <td class=\"kbd\">\n      <button class=\"btn action-button kbd\" id=\"typedDELETE\" type=\"button\">DELETE<\/button>\n    <\/td>\n  <\/tr>\n<\/table> ",
+      "deps": [
+
+      ]
+    },
+    "letterTable": {
+      "html": "<h4>Guesses<\/h4><div>\n  <table class=\"guesses\">\n    <tr>\n      <td class=\"not_entered guesses\">E<\/td>\n      <td class=\"not_entered guesses\">L<\/td>\n      <td class=\"not_entered guesses\">V<\/td>\n      <td class=\"not_entered guesses\">A<\/td>\n      <td class=\"not_entered guesses\">R<\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n    <tr>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n      <td class=\"not_entered guesses\"> <\/td>\n    <\/tr>\n  <\/table>\n<\/div>",
+      "deps": [
+
+      ]
+    },
+    "somePossibleWords": {
+      "html": "<h4 style=\"color: red\">Not a valid word in the word list<\/h4>",
+      "deps": [
+
+      ]
+    }
+  },
+  "export": {
+
+  }
+}
