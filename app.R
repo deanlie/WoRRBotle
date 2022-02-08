@@ -36,7 +36,7 @@ ui <- fluidPage(
           # )
           radioButtons("targetType",
                        "Target Word Source",
-                       choices = list(Random = "Random", Date = "Date", User = "User"),
+                       choices = list(Random = "Random", Archive = "Archive", User = "User"),
                        selected = "Random",
                        inline = FALSE),
           tabsetPanel(
@@ -52,7 +52,7 @@ ui <- fluidPage(
                          tags$p("Random action button here")
                          # actionButton(OUCH)
                          ),
-            tabPanelBody("Date",
+            tabPanelBody("Archive",
                          tags$p("Slider for date here")
                          # sliderInput(OUCH)
                          )),
