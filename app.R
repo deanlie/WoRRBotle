@@ -123,6 +123,8 @@ observeLetterEvent <- function(aLetter, inputList, valuesList) {
 # Define server logic for the game
 server <- function(input, output) {
   
+    yesterdaysWord <- wordle_solns[today("EST") - as.Date("2021-06-19")]
+
     r <- reactiveValues(nKeys = 0, # Which column does a new keypress go in
                         Done = FALSE,
                         Won = FALSE,
@@ -136,10 +138,9 @@ server <- function(input, output) {
                                     boundary("character"))),
                           BestClass = "unknown",
                           Modified = FALSE),
+                        Sought = yesterdaysWord,
                         theGame = WordleGame$new(wordle_dict,
-                                                 target_word = 
-                                                   wordle_solns[today("EST") -
-                                                                as.Date("2021-06-19")]),
+                                                 target_word = yesterdaysWord),
                         theHelper = WordleHelper$new(5),
                         theWords = c(),
                         theSortedSuggestions = initial_suggestions,
