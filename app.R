@@ -90,11 +90,7 @@ handleLetterKey <- function(rVals, aLetter) {
     if (rVals$nKeys < 5) {
       rVals$nKeys = rVals$nKeys + 1
       substr(rVals$Guesses[rVals$guessNumber], rVals$nKeys, rVals$nKeys) <- aLetter
-    } else {
-      message("Too many keys, input ", aLetter, " ignored")
     }
-  } else {
-    message("No more guesses! Sorry, you lost.")
   }
 
   return(rVals)
@@ -156,22 +152,9 @@ server <- function(input, output) {
     })
     
     observeEvent(input$randomPuzzle, ignoreInit = TRUE, {
-      if (is.na(input$randomPuzzle)) {
-        message("Observed change in input$randomPuzzle, it is NA")
-      } else {
-        message("Observed change in input$randomPuzzle, it is '", input$randomPuzzle, "'")
-      }
       if (!is.null(input$randomPuzzle) && !is.na(input$randomPuzzle)) {
         r$Sought <- sample(wordle_solns, 1)
-        if (is.na(r$Sought)) {
-          message("  ... r$Sought is NA")
-        } else {
-          message("  ... r$Sought is ", r$Sought)
-        }
-      } else {
-        message("  ... no change to r$Sought here")
       }
-      message("   exit observeEvent(input$randomPuzzle, {...}")
     })
     
     observeEvent(input$puzzleDate, ignoreInit = TRUE, {
