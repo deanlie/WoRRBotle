@@ -140,7 +140,7 @@ server <- function(input, output) {
                                                  target_word = yesterdaysWord),
                         theHelper = WordleHelper$new(5),
                         theWords = c(),
-                        theSortedSuggestions = initial_suggestions,
+                        theSortedSuggestions = filterInitialSuggestionsBySolutions(),
                         suggestionsAreCurrent = TRUE)
 
     lapply(unlist(str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "")),
@@ -189,7 +189,7 @@ server <- function(input, output) {
                                       target_word = str_to_lower(input$Sought))
           r$theHelper <- WordleHelper$new(5)
           r$theWords <- r$theHelper$words
-          r$theSortedSuggestions <- initial_suggestions
+          r$theSortedSuggestions <- filterInitialSuggestionsBySolutions()
           r$suggestionsAreCurrent <- TRUE
           r$Done <- FALSE
         } else {
@@ -222,7 +222,7 @@ server <- function(input, output) {
                                           target_word = str_to_lower(r$Sought))
               r$theHelper <- WordleHelper$new(5)
               r$theWords <- r$theHelper$words
-              r$theSortedSuggestions <- initial_suggestions
+              r$theSortedSuggestions <- filterInitialSuggestionsBySolutions()
               r$suggestionsAreCurrent <- TRUE
               r$Done <- FALSE
             } else {

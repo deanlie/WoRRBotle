@@ -1,3 +1,5 @@
+library(wordle)
+
 initial_suggestions <- c(
  "arose", "arise", "raise", "aloes", "arles", "earls", "laser",
  "reals", "stoae", "aster", "rates", "stare", "tares", "taser",
@@ -19,4 +21,26 @@ initial_suggestions <- c(
  "yales", "aegis", "deans", "sedan", "yeast", "alecs", "laces",
  "scale", "lapse", "leaps", "pales", "peals", "pleas", "sepal",
  "lames", "males", "meals", "eosin", "noise", "reins", "resin")
+
+filterByInfo <- function(aWordList) {
+  # For each word in the list, see how many candidates it eliminates, that's its score
+  # So:
+  candidateTibble <- tibble(Words = aWordList)
+  scoreByElimination <- function(aWord) {
+    
+  }
+  scoredCandidates <- candidateTibble %>%
+    mutate(Scores = scoreByElimination(Words), .after = Words)
+}
+
+filterInitialSuggestionsBySolutions <- function() {
+  theIntersection <- intersect(initial_suggestions, wordle_solns)
+
+  # theHelper <- theHelper <- WordleHelper$new(5)
+  # byUnmatched <- sortCandidatesByUnmatchedLettersHit(wordle_solns)
+  
+  return(theIntersection)
+  
+  # return(list(INTERSECT = theIntersection, UNMATCHED = byUnmatched))
+}
  
