@@ -132,4 +132,8 @@ button.action-button.absent {
   color: #808080;
 }
 
+.datepicker table tr td, .datepicker table tr th {
+  font-size: 1.0rem;
+}
+
 
