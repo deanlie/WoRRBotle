@@ -45,7 +45,7 @@ ui <- fluidPage(
             selected = "Random",
             tabPanelBody("Random",
                          # OUCH add an ID or class to allow styling
-                         actionButton("randomPuzzle", "Hit me")
+                         actionButton("randomPuzzle", "New Word")
                          ),
             tabPanelBody("User",
                          passwordInput("Sought",
@@ -136,9 +136,9 @@ server <- function(input, output) {
                           BestClass = "unknown",
                           Modified = FALSE),
                         Sought = yesterdaysWord,
-                        theGame = WordleGame$new(wordle_solns,
+                        theGame = WordleGame$new(wordle_dict,
                                                  target_word = yesterdaysWord),
-                        theHelper = WordleHelper$new(5),
+                        theHelper = WordleHelper$new(5, words = wordle_dict),
                         theWords = c(),
                         theSortedSuggestions = filterInitialSuggestionsBySolutions(),
                         suggestionsAreCurrent = TRUE)
@@ -184,10 +184,10 @@ server <- function(input, output) {
                       boundary("character"))),
             BestClass = "unknown",
             Modified = FALSE)
-          r$theGame <- WordleGame$new(wordle_solns,
+          r$theGame <- WordleGame$new(wordle_dict,
                                       debug = FALSE,
                                       target_word = str_to_lower(input$Sought))
-          r$theHelper <- WordleHelper$new(5)
+          r$theHelper <- WordleHelper$new(5, words = wordle_dict)
           r$theWords <- r$theHelper$words
           r$theSortedSuggestions <- filterInitialSuggestionsBySolutions()
           r$suggestionsAreCurrent <- TRUE
@@ -217,10 +217,10 @@ server <- function(input, output) {
                           boundary("character"))),
                 BestClass = "unknown",
                 Modified = FALSE)
-              r$theGame <- WordleGame$new(wordle_solns,
+              r$theGame <- WordleGame$new(wordle_dict,
                                           debug = FALSE,
                                           target_word = str_to_lower(r$Sought))
-              r$theHelper <- WordleHelper$new(5)
+              r$theHelper <- WordleHelper$new(5, words = wordle_dict)
               r$theWords <- r$theHelper$words
               r$theSortedSuggestions <- filterInitialSuggestionsBySolutions()
               r$suggestionsAreCurrent <- TRUE

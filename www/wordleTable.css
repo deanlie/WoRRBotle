@@ -136,4 +136,16 @@ button.action-button.absent {
   font-size: 1.0rem;
 }
 
+#randomPuzzle {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  margin-bottom: 20px;
+  border: 1px solid white;
+  border-radius: 5px;
+}
+
+div#targetType {
+  margin-bottom: 0px;
+}
+
 
