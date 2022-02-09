@@ -158,7 +158,6 @@ server <- function(input, output) {
     })
     
     observeEvent(input$puzzleDate, ignoreInit = TRUE, {
-      str(input$puzzleDate)
       if (!is.null(input$puzzleDate) && !is.na(input$puzzleDate)) {
         r$Sought <- wordle_solns[input$puzzleDate - as.Date("2021-06-20")]
       }
