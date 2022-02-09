@@ -158,40 +158,17 @@ server <- function(input, output) {
     })
     
     observeEvent(input$puzzleDate, ignoreInit = TRUE, {
-      message("Observed change in input$puzzleDate")
       str(input$puzzleDate)
-      if (is.na(input$puzzleDate)) {
-        message("Observed change in input$puzzleDate, it is NA")
-      } else {
-        message("Observed change in input$puzzleDate, it is '", input$puzzleDate, "'")
-      }
       if (!is.null(input$puzzleDate) && !is.na(input$puzzleDate)) {
         r$Sought <- wordle_solns[input$puzzleDate - as.Date("2021-06-20")]
-        if (is.na(r$Sought)) {
-          message("  ... r$Sought is NA")
-        } else {
-          message("  ... r$Sought is ", r$Sought)
-        }
-      } else {
-        message("  ... no change to r$Sought here")
       }
-      message("   exit observeEvent(input$puzzleDate, {...}")
     })
     
     observeEvent(input$Sought, ignoreInit = TRUE, {
-      if (is.na(input$Sought)) {
-        message("Observed change in input$Sought, it is NA")
-      } else {
-        message("Observed change in input$Sought, it is '", input$Sought, "'")
-      }
       if (!is.na(input$Sought) && !is.null(input$Sought) && str_length(input$Sought) > 0) {
-        message("   .. will set r$Sought from it")
         r$Sought <- input$Sought
         if (is.na(r$Sought)) {
-          message("  ... r$Sought is NA")
           r$Error <- NULL
-        } else {
-          message("  ... r$Sought is ", r$Sought)
         }
       }
       if(str_length(input$Sought) == 5) {
@@ -224,23 +201,11 @@ server <- function(input, output) {
     })
     
     observeEvent(r$Sought, {
-      if (is.na(r$Sought)) {
-        message("Observed change in r$Sought, it is NA")
-      } else {
-        message("Observed change in r$Sought, it is ", r$Sought)
-      }
       if (!is.null(r$Sought) && !is.na(r$Sought)) {
-        message(" ... after first 'if'")
-        str(r$Sought)
         if (r$Sought != '') {
-          message(" ... after second 'if'")
-          str(r$Sought)
           r$Error <- NULL
-          message(" ... str_length(r$Sought) is ", str_length(r$Sought))
           if(str_length(r$Sought) == 5) {
-            message(" ... after third 'if'")
             if (str_to_lower(r$Sought) %in% r$theGame$words) {
-              message(" ... after fourth 'if'")
               r$nKeys <- 0
               r$Done <- FALSE
               r$Won <- FALSE
@@ -270,21 +235,17 @@ server <- function(input, output) {
           }
         }
       }
-      message("  exit observeEvent(r$Sought, {...}")
     })
     
     observeEvent(input$typedENTER, {
       if (r$Done || (r$nKeys < 5)) {
         if (r$nKeys < 5) {
           r$Error <- "You can't enter an incomplete guess!"
-        } else {
-          message("Solved or out of guesses")
         }
       } else {
         # Score that, update keyboard status, and redisplay all letter rows
         if (r$guessNumber < 7 && !r$Done) {
           newGuess <- r$Guesses[r$guessNumber]
-          message("ENTER guess: ", newGuess)
           lcNewGuess <- str_to_lower(newGuess)
           if (lcNewGuess %in% r$theGame$words) {
             response <- r$theGame$try(lcNewGuess, quiet = TRUE)
