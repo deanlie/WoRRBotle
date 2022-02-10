@@ -144,6 +144,11 @@ button.action-button.absent {
   border-radius: 5px;
 }
 
+#randomPuzzle:active {
+  border: 1px solid red;
+  background-color: #800000;
+}
+
 div#targetType {
   margin-bottom: 0px;
 }
