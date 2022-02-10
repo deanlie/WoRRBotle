@@ -268,7 +268,7 @@ server <- function(input, output) {
             }
             r$guessNumber <- r$guessNumber + 1
             if (r$guessNumber > 6) {
-              r$Error <- "No more guesses! Sorry, game over."
+              r$Error <- "-- Game Over --"
               r$Done <- TRUE
             } else {
               r$Error <- NULL
