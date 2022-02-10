@@ -1,7 +1,10 @@
 {
   "input": {
+    "puzzleDate": "2022-02-07",
+    "randomPuzzle": 0,
     "showHints": false,
     "Sought": "panic",
+    "targetType": "Random",
     "typedA": 0,
     "typedB": 0,
     "typedC": 1,
@@ -30,8 +33,7 @@
     "typedX": 0,
     "typedY": 0,
     "typedZ": 0,
-    "userInputQ": "userTgtNo",
-    "userTarget": false
+    "userInputQ": "Random"
   },
   "output": {
     "keyboardTables": {

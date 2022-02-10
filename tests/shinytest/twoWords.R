@@ -1,6 +1,7 @@
 app <- ShinyDriver$new("../../")
 app$snapshotInit("twoWords")
 
+app$setInputs(puzzleDate = "2022-02-07")
 app$setInputs(Sought = "PANIC")
 app$setInputs(typedP = "click")
 app$setInputs(typedA = "click")

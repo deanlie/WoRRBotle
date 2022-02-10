@@ -1,6 +1,7 @@
 app <- ShinyDriver$new("../../")
 app$snapshotInit("UIRunthrough")
 
+app$setInputs(puzzleDate = "2022-02-07")
 app$snapshot()
 app$setInputs(targetType = "Archive")
 app$setInputs(puzzleDate = "2022-02-06")
