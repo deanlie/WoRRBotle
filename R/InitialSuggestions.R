@@ -24,4 +24,9 @@ initial_suggestions <- c(
  "yales", "aegis", "deans", "sedan", "yeast", "alecs", "laces",
  "scale", "lapse", "leaps", "pales", "peals", "pleas", "sepal",
  "lames", "males", "meals", "eosin", "noise", "reins", "resin")
+
+filterInitialSuggestionsBySolutions <- function() {
+  return(intersect(initial_suggestions, wordle_solns))
+}
+
  
