@@ -24,19 +24,11 @@ ui <- fluidPage(
     # Sidebar with the controls 
     sidebarLayout(
         sidebarPanel(
-          # radioButtons(
-          #   inputId,
-          #   label,
-          #   choices = NULL,
-          #   selected = NULL,
-          #   inline = FALSE,
-          #   width = NULL,
-          #   choiceNames = NULL,
-          #   choiceValues = NULL
-          # )
           radioButtons("targetType",
                        "Target Word Source",
-                       choices = list(Random = "Random", Archive = "Archive", User = "User"),
+                       choices = list(Random = "Random",
+                                      Archive = "Archive",
+                                      User = "User"),
                        selected = "Random",
                        inline = FALSE),
           tabsetPanel(
@@ -44,7 +36,6 @@ ui <- fluidPage(
             type = "hidden",
             selected = "Random",
             tabPanelBody("Random",
-                         # OUCH add an ID or class to allow styling
                          actionButton("randomPuzzle", "New Word")
                          ),
             tabPanelBody("User",
@@ -54,7 +45,6 @@ ui <- fluidPage(
                                        '100px',
                                        placeholder = "?????")),
             tabPanelBody("Archive",
-                         # OUCH track down styling of date calendar day text
                          dateInput("puzzleDate",
                                    "Puzzle Date",
                                    value = (today("EST") - 1),
