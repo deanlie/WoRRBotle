@@ -110,6 +110,9 @@ observeLetterEvent <- function(aLetter, inputList, valuesList) {
 resetGameState <- function(oldState, newSourceWord) {
   oldState$Done <- FALSE
   oldState$Won <- FALSE
+  oldState$Guess <- "     "
+  oldState$guessNumber <- 1
+  oldState$Guesses <- rep("     ", 6)
   
   return(oldState)
 }
@@ -170,9 +173,6 @@ server <- function(input, output) {
       if(str_length(input$Sought) == 5) {
         if (str_to_lower(input$Sought) %in% r$theGame$words) {
           r$nKeys <- 0
-          r$Guess <- "     "
-          r$guessNumber = 1
-          r$Guesses <- rep("     ", 6)
           r$Responses <- rep("  ", 6)
           r$KeyClasses <- tibble(Letter = unlist(
             str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
@@ -202,9 +202,6 @@ server <- function(input, output) {
           if(str_length(r$Sought) == 5) {
             if (str_to_lower(r$Sought) %in% r$theGame$words) {
               r$nKeys <- 0
-              r$Guess <- "     "
-              r$guessNumber = 1
-              r$Guesses <- rep("     ", 6)
               r$Responses <- rep("  ", 6)
               r$KeyClasses <- tibble(Letter = unlist(
                 str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
