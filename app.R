@@ -301,17 +301,28 @@ server <- function(input, output) {
         HTML(paste(tags$h4(r$Error, style = "color: red")))
       } else {
         if (r$Won) {
-          victoryMessage <- "You won!"
+          victoryMessage <- switch(r$guessNumber - 1,
+                                   "Genius",
+                                   "Magnificent",
+                                   "Impressive",
+                                   "Splendid",
+                                   "Great",
+                                   "Phew!")
+          colorCode <- "#44FF44"
           if (r$HintsGiven) {
-            victoryMessage <- paste(victoryMessage, "But you had help")
-          }
-            HTML(paste(tags$h4(victoryMessage, style = "color: #44FF44")))
+            victoryMessage <- paste(victoryMessage, "... but you had help")
+            colorCode <- "#22CC22"
+            }
+            theStyle <- paste("color:",
+                              colorCode)
+            HTML(paste(tags$h4(victoryMessage, style = theStyle)))
         } else {
           if (input$showHints) {
             if (!r$suggestionsAreCurrent) {
               r$theSortedSuggestions <- sortCandidatesByUnmatchedLettersHit(r$theHelper$words)
               r$suggestionsAreCurrent <- TRUE
             }
+            r$HintsGiven <- TRUE
             HTML(topNRemainingWords(r$theSortedSuggestions, 25))
           }
         }
