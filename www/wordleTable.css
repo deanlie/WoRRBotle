@@ -5,18 +5,12 @@ table {
 
 table.guesses {
   border-collapse: separate;
-  width: 312px;
-  height: 420px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: auto;
+  padding-bottom: auto;
   padding-left: auto;
   padding-right: auto;
   text-align: center;
-  line-height: 1.2;
   border-spacing: 2px;
-  text-transform: uppercase;
-  font-size: 3rem;
-  font-family: Sans-Serif;
   margin-left: auto;
   margin-right: auto;
 }
@@ -32,7 +26,6 @@ td {
   text-align: center;
   border-spacing: 2px;
   text-transform: uppercase;
-  font-size: 50px;
   font-family: Sans-Serif;
 }
 
@@ -41,8 +34,11 @@ td.guesses {
   border: 1px solid white;
   margin-left: auto;
   margin-right: auto;
-  width: 60px;
-  height: 70px;
+  width: 3.3rem;
+  height: 3.5rem;
+  font-size: 2.5rem;
+  font-family: Sans-Serif;
+  line-height: 1.0;
   padding-top: auto;
   padding-bottom: auto;
   box-sizing: border-box;
@@ -53,15 +49,15 @@ td.kbd {
   border-collapse: separate;
   margin-left: auto;
   margin-right: auto;
-  width: 30px;
-  height: 45px;
-  padding-top: 0px;
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-bottom: 0px;
+  width: 2.2rem;
+  height: 3rem;
+  padding-top: auto;
+  padding-left: auto;
+  padding-right: auto;
+  padding-bottom: auto;
 	font-size: .75rem;
   border-radius: 5px;
-  box-sizing: content-box;
+  box-sizing: border-box;
 }
 
 h2, h4 {
