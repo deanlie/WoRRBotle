@@ -107,24 +107,62 @@ observeLetterEvent <- function(aLetter, inputList, valuesList) {
   observeEvent(inputList[[inputIndex]], {valuesList <- handleLetterKey(valuesList, aLetter)})
 }
 
+resetGameState <- function(oldState, newSourceWord) {
+  oldState$Done <- FALSE
+  oldState$Won <- FALSE
+  oldState$Error <- NULL
+  oldState$HintsGiven <- FALSE
+
+  oldState$Guess <- "     "
+  oldState$guessNumber <- 1
+  oldState$Guesses <- rep("     ", 6)
+
+  oldState$nKeys <- 0 # Which column does a new keypress go in
+  oldState$Responses <- rep("  ", 6)
+  oldState$KeyClasses <- tibble(Letter = unlist(
+    str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+              boundary("character"))),
+    BestClass = "unknown",
+    Modified = FALSE)
+
+  oldState$theHelper <- WordleHelper$new(5, words = wordle_dict)
+  oldState$theWords <- c()
+  oldState$theSortedSuggestions <- filterInitialSuggestionsBySolutions()
+  oldState$suggestionsAreCurrent <- TRUE
+
+  oldState$theGame <- WordleGame$new(wordle_dict,
+                                     debug = FALSE,
+                                     target_word = newSourceWord)
+  
+  updateCheckboxInput(session = getDefaultReactiveDomain(),
+                      "showHints",
+                      value = FALSE)
+
+  return(oldState)
+}
+
 # Define server logic for the game
 server <- function(input, output) {
   
     yesterdaysWord <- wordle_solns[today("EST") - as.Date("2021-06-19")]
 
-    r <- reactiveValues(nKeys = 0, # Which column does a new keypress go in
-                        Done = FALSE,
+    r <- reactiveValues(Done = FALSE,
                         Won = FALSE,
-                        Guess = "     ",
                         Error = NULL,
+                        HintsGiven = FALSE,
+
+                        Guess = "     ",
                         guessNumber = 1,
                         Guesses = rep("     ", 6),
+
+                        nKeys = 0, # Which column does a new keypress go in
                         Responses = rep(" ", 6),
                         KeyClasses = tibble(Letter = unlist(
                           str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
                                     boundary("character"))),
                           BestClass = "unknown",
                           Modified = FALSE),
+
                         Sought = yesterdaysWord,
                         theGame = WordleGame$new(wordle_dict,
                                                  target_word = yesterdaysWord),
@@ -162,26 +200,7 @@ server <- function(input, output) {
       }
       if(str_length(input$Sought) == 5) {
         if (str_to_lower(input$Sought) %in% r$theGame$words) {
-          r$nKeys <- 0
-          r$Done <- FALSE
-          r$Won <- FALSE
-          r$Guess <- "     "
-          r$guessNumber = 1
-          r$Guesses <- rep("     ", 6)
-          r$Responses <- rep("  ", 6)
-          r$KeyClasses <- tibble(Letter = unlist(
-            str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                      boundary("character"))),
-            BestClass = "unknown",
-            Modified = FALSE)
-          r$theGame <- WordleGame$new(wordle_dict,
-                                      debug = FALSE,
-                                      target_word = str_to_lower(input$Sought))
-          r$theHelper <- WordleHelper$new(5, words = wordle_dict)
-          r$theWords <- r$theHelper$words
-          r$theSortedSuggestions <- filterInitialSuggestionsBySolutions()
-          r$suggestionsAreCurrent <- TRUE
-          r$Done <- FALSE
+          r <- resetGameState(r, str_to_lower(input$Sought))
         } else {
           # Display an error message when illegal word is input
           r$Error <- "Not a valid word in the word list"
@@ -195,26 +214,7 @@ server <- function(input, output) {
           r$Error <- NULL
           if(str_length(r$Sought) == 5) {
             if (str_to_lower(r$Sought) %in% r$theGame$words) {
-              r$nKeys <- 0
-              r$Done <- FALSE
-              r$Won <- FALSE
-              r$Guess <- "     "
-              r$guessNumber = 1
-              r$Guesses <- rep("     ", 6)
-              r$Responses <- rep("  ", 6)
-              r$KeyClasses <- tibble(Letter = unlist(
-                str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                          boundary("character"))),
-                BestClass = "unknown",
-                Modified = FALSE)
-              r$theGame <- WordleGame$new(wordle_dict,
-                                          debug = FALSE,
-                                          target_word = str_to_lower(r$Sought))
-              r$theHelper <- WordleHelper$new(5, words = wordle_dict)
-              r$theWords <- r$theHelper$words
-              r$theSortedSuggestions <- filterInitialSuggestionsBySolutions()
-              r$suggestionsAreCurrent <- TRUE
-              r$Done <- FALSE
+              r <- resetGameState(r, str_to_lower(r$Sought))
             } else {
               # Display an error message when illegal word is input
               r$Error <- "Not a valid word in the word list"
@@ -248,6 +248,7 @@ server <- function(input, output) {
               if (input$showHints) {
                 r$theSortedSuggestions <- sortCandidatesByUnmatchedLettersHit(r$theHelper$words)
                 r$suggestionsAreCurrent <- TRUE
+                r$HintsGiven <- TRUE
               } else {
                 r$suggestionsAreCurrent <- FALSE
               }
@@ -300,15 +301,28 @@ server <- function(input, output) {
         HTML(paste(tags$h4(r$Error, style = "color: red")))
       } else {
         if (r$Won) {
-          # OUCH Vary this depending on how many guesses it took
-          # OUCH Would it be cleaner to use class/stylesheet rather than hardcoded color?
-          HTML(paste(tags$h4("You won!", style = "color: #44FF44")))
+          victoryMessage <- switch(r$guessNumber - 1,
+                                   "Genius",
+                                   "Magnificent",
+                                   "Impressive",
+                                   "Splendid",
+                                   "Great",
+                                   "Phew!")
+          colorCode <- "#44FF44"
+          if (r$HintsGiven) {
+            victoryMessage <- paste(victoryMessage, "... but you had help")
+            colorCode <- "#22CC22"
+            }
+            theStyle <- paste("color:",
+                              colorCode)
+            HTML(paste(tags$h4(victoryMessage, style = theStyle)))
         } else {
           if (input$showHints) {
             if (!r$suggestionsAreCurrent) {
               r$theSortedSuggestions <- sortCandidatesByUnmatchedLettersHit(r$theHelper$words)
               r$suggestionsAreCurrent <- TRUE
             }
+            r$HintsGiven <- TRUE
             HTML(topNRemainingWords(r$theSortedSuggestions, 25))
           }
         }
