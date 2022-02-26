@@ -133,7 +133,10 @@ resetGameState <- function(oldState, newSourceWord) {
                                      debug = FALSE,
                                      target_word = newSourceWord)
   
-  
+  updateCheckboxInput(session = getDefaultReactiveDomain(),
+                      "showHints",
+                      value = FALSE)
+
   return(oldState)
 }
 
