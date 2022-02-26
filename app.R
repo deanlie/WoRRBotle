@@ -123,8 +123,12 @@ resetGameState <- function(oldState, newSourceWord) {
               boundary("character"))),
     BestClass = "unknown",
     Modified = FALSE)
-  
-  
+
+  oldState$theHelper <- WordleHelper$new(5, words = wordle_dict)
+  oldState$theWords <- c()
+  oldState$theSortedSuggestions <- filterInitialSuggestionsBySolutions()
+  oldState$suggestionsAreCurrent <- TRUE
+
   return(oldState)
 }
 
@@ -189,10 +193,6 @@ server <- function(input, output) {
           r$theGame <- WordleGame$new(wordle_dict,
                                       debug = FALSE,
                                       target_word = str_to_lower(input$Sought))
-          r$theHelper <- WordleHelper$new(5, words = wordle_dict)
-          r$theWords <- r$theHelper$words
-          r$theSortedSuggestions <- filterInitialSuggestionsBySolutions()
-          r$suggestionsAreCurrent <- TRUE
 
           r <- resetGameState(r, str_to_lower(input$Sought))
         } else {
@@ -211,10 +211,6 @@ server <- function(input, output) {
               r$theGame <- WordleGame$new(wordle_dict,
                                           debug = FALSE,
                                           target_word = str_to_lower(r$Sought))
-              r$theHelper <- WordleHelper$new(5, words = wordle_dict)
-              r$theWords <- r$theHelper$words
-              r$theSortedSuggestions <- filterInitialSuggestionsBySolutions()
-              r$suggestionsAreCurrent <- TRUE
 
               r <- resetGameState(r, str_to_lower(r$Sought))
             } else {
