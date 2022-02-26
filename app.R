@@ -243,14 +243,18 @@ server <- function(input, output) {
               r$Done <- TRUE
               r$Won <- TRUE
             } else {
-              r$theHelper$update(lcNewGuess, response)
-              r$theWords <- r$theHelper$words
-              if (input$showHints) {
-                r$theSortedSuggestions <- sortCandidatesByUnmatchedLettersHit(r$theHelper$words)
-                r$suggestionsAreCurrent <- TRUE
-                r$HintsGiven <- TRUE
+              if (r$guessNumber == 6) {
+                
               } else {
-                r$suggestionsAreCurrent <- FALSE
+                r$theHelper$update(lcNewGuess, response)
+                r$theWords <- r$theHelper$words
+                if (input$showHints) {
+                  r$theSortedSuggestions <- sortCandidatesByUnmatchedLettersHit(r$theHelper$words)
+                  r$suggestionsAreCurrent <- TRUE
+                  r$HintsGiven <- TRUE
+                } else {
+                  r$suggestionsAreCurrent <- FALSE
+                }
               }
               r$nKeys <- 0
               r$KeyClasses <- updateKeyClasses(response,
@@ -258,8 +262,8 @@ server <- function(input, output) {
                                                r$KeyClasses)
             }
             r$guessNumber <- r$guessNumber + 1
-            if (r$guessNumber > 6) {
-              r$Error <- "-- Game Over --"
+            if (r$guessNumber > 6 && !r$Done) {
+              r$Error <- "Better Luck Next Time"
               r$Done <- TRUE
             } else {
               r$Error <- NULL
@@ -268,7 +272,7 @@ server <- function(input, output) {
             r$Error <- "Not a valid word in the word list"
           }
         } else {
-          r$Error <- "No more guesses! Sorry, game over."
+          r$Error <- "-- Game Over --"
         }
       }
     })
