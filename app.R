@@ -129,6 +129,11 @@ resetGameState <- function(oldState, newSourceWord) {
   oldState$theSortedSuggestions <- filterInitialSuggestionsBySolutions()
   oldState$suggestionsAreCurrent <- TRUE
 
+  oldState$theGame <- WordleGame$new(wordle_dict,
+                                     debug = FALSE,
+                                     target_word = newSourceWord)
+  
+  
   return(oldState)
 }
 
@@ -190,10 +195,6 @@ server <- function(input, output) {
       }
       if(str_length(input$Sought) == 5) {
         if (str_to_lower(input$Sought) %in% r$theGame$words) {
-          r$theGame <- WordleGame$new(wordle_dict,
-                                      debug = FALSE,
-                                      target_word = str_to_lower(input$Sought))
-
           r <- resetGameState(r, str_to_lower(input$Sought))
         } else {
           # Display an error message when illegal word is input
@@ -208,10 +209,6 @@ server <- function(input, output) {
           r$Error <- NULL
           if(str_length(r$Sought) == 5) {
             if (str_to_lower(r$Sought) %in% r$theGame$words) {
-              r$theGame <- WordleGame$new(wordle_dict,
-                                          debug = FALSE,
-                                          target_word = str_to_lower(r$Sought))
-
               r <- resetGameState(r, str_to_lower(r$Sought))
             } else {
               # Display an error message when illegal word is input
