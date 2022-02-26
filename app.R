@@ -190,7 +190,7 @@ server <- function(input, output) {
           r$suggestionsAreCurrent <- TRUE
           r$Done <- FALSE
           
-          r <- resetGameState(r, str_to_lower(input$Sought))
+          # r <- resetGameState(r, str_to_lower(input$Sought))
         } else {
           # Display an error message when illegal word is input
           r$Error <- "Not a valid word in the word list"
@@ -225,7 +225,7 @@ server <- function(input, output) {
               r$suggestionsAreCurrent <- TRUE
               r$Done <- FALSE
               
-              r <- resetGameState(r, str_to_lower(r$Sought))
+              # r <- resetGameState(r, str_to_lower(r$Sought))
             } else {
               # Display an error message when illegal word is input
               r$Error <- "Not a valid word in the word list"
