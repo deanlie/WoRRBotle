@@ -111,6 +111,7 @@ resetGameState <- function(oldState, newSourceWord) {
   oldState$Done <- FALSE
   oldState$Won <- FALSE
   oldState$Error <- NULL
+  oldState$HintsGiven <- FALSE
 
   oldState$Guess <- "     "
   oldState$guessNumber <- 1
@@ -148,6 +149,7 @@ server <- function(input, output) {
     r <- reactiveValues(Done = FALSE,
                         Won = FALSE,
                         Error = NULL,
+                        HintsGiven = FALSE,
 
                         Guess = "     ",
                         guessNumber = 1,
@@ -246,6 +248,7 @@ server <- function(input, output) {
               if (input$showHints) {
                 r$theSortedSuggestions <- sortCandidatesByUnmatchedLettersHit(r$theHelper$words)
                 r$suggestionsAreCurrent <- TRUE
+                r$HintsGiven <- TRUE
               } else {
                 r$suggestionsAreCurrent <- FALSE
               }
@@ -298,9 +301,11 @@ server <- function(input, output) {
         HTML(paste(tags$h4(r$Error, style = "color: red")))
       } else {
         if (r$Won) {
-          # OUCH Vary this depending on how many guesses it took
-          # OUCH Would it be cleaner to use class/stylesheet rather than hardcoded color?
-          HTML(paste(tags$h4("You won!", style = "color: #44FF44")))
+          victoryMessage <- "You won!"
+          if (r$HintsGiven) {
+            victoryMessage <- paste(victoryMessage, "But you had help")
+          }
+            HTML(paste(tags$h4(victoryMessage, style = "color: #44FF44")))
         } else {
           if (input$showHints) {
             if (!r$suggestionsAreCurrent) {
