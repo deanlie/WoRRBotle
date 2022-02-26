@@ -170,8 +170,6 @@ server <- function(input, output) {
       if(str_length(input$Sought) == 5) {
         if (str_to_lower(input$Sought) %in% r$theGame$words) {
           r$nKeys <- 0
-          r$Done <- FALSE
-          r$Won <- FALSE
           r$Guess <- "     "
           r$guessNumber = 1
           r$Guesses <- rep("     ", 6)
@@ -188,9 +186,8 @@ server <- function(input, output) {
           r$theWords <- r$theHelper$words
           r$theSortedSuggestions <- filterInitialSuggestionsBySolutions()
           r$suggestionsAreCurrent <- TRUE
-          r$Done <- FALSE
-          
-          # r <- resetGameState(r, str_to_lower(input$Sought))
+
+          r <- resetGameState(r, str_to_lower(input$Sought))
         } else {
           # Display an error message when illegal word is input
           r$Error <- "Not a valid word in the word list"
@@ -205,8 +202,6 @@ server <- function(input, output) {
           if(str_length(r$Sought) == 5) {
             if (str_to_lower(r$Sought) %in% r$theGame$words) {
               r$nKeys <- 0
-              r$Done <- FALSE
-              r$Won <- FALSE
               r$Guess <- "     "
               r$guessNumber = 1
               r$Guesses <- rep("     ", 6)
@@ -223,9 +218,8 @@ server <- function(input, output) {
               r$theWords <- r$theHelper$words
               r$theSortedSuggestions <- filterInitialSuggestionsBySolutions()
               r$suggestionsAreCurrent <- TRUE
-              r$Done <- FALSE
-              
-              # r <- resetGameState(r, str_to_lower(r$Sought))
+
+              r <- resetGameState(r, str_to_lower(r$Sought))
             } else {
               # Display an error message when illegal word is input
               r$Error <- "Not a valid word in the word list"
