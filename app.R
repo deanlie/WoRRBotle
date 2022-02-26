@@ -117,6 +117,13 @@ observeLetterEvent <- function(aLetter, inputList, valuesList) {
   observeEvent(inputList[[inputIndex]], {valuesList <- handleLetterKey(valuesList, aLetter)})
 }
 
+resetGameState <- function(oldState, newSourceWord) {
+  oldState$Done <- FALSE
+  oldState$Won <- FALSE
+  
+  return(oldState)
+}
+
 # Define server logic for the game
 server <- function(input, output) {
   
@@ -192,6 +199,8 @@ server <- function(input, output) {
           r$theSortedSuggestions <- filterInitialSuggestionsBySolutions()
           r$suggestionsAreCurrent <- TRUE
           r$Done <- FALSE
+          
+          r <- resetGameState(r, str_to_lower(input$Sought))
         } else {
           # Display an error message when illegal word is input
           r$Error <- "Not a valid word in the word list"
@@ -225,6 +234,8 @@ server <- function(input, output) {
               r$theSortedSuggestions <- filterInitialSuggestionsBySolutions()
               r$suggestionsAreCurrent <- TRUE
               r$Done <- FALSE
+              
+              r <- resetGameState(r, str_to_lower(r$Sought))
             } else {
               # Display an error message when illegal word is input
               r$Error <- "Not a valid word in the word list"
