@@ -1,0 +1,14 @@
+name: WoRRBotle
+title: WoRRBotle
+username:
+account: deanlie
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5721247
+bundleId: 5621250
+url: https://deanlie.shinyapps.io/WoRRBotle/
+when: 1645905459.7667
+lastSyncTime: 1645905459.76671
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: Develop/.DS_Store|www/giantDateRequester.png|www/sample_screenshot.png|www/wordListVsSuggestions20220308.png|tests
